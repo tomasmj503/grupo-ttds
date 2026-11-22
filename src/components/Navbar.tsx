@@ -24,54 +24,44 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
 
   return (
     <header
-      className={`fixed top-0 left-0 w-full z-40 transition-all duration-700 ease-out ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-[#050505]/90 backdrop-blur-md border-b border-white/10 py-3 sm:py-4 shadow-2xl"
-          : "bg-gradient-to-b from-black/80 via-black/40 to-transparent border-b border-transparent py-4 sm:py-6"
+          ? "bg-[#161616]/90 backdrop-blur-md border-b border-white/10"
+          : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 md:px-8 flex items-center justify-between">
+      <div className="flex items-center justify-between px-5 py-4 max-w-7xl mx-auto">
         {/* Izquierda: Logo Grupo TTDS */}
         <Link
           href="/"
-          className="flex items-center shrink-0 group focus:outline-none focus:ring-1 focus:ring-[#C8A97E]"
+          className="flex items-center shrink-0 focus:outline-none"
           aria-label="Ir a página de inicio Grupo TTDS"
         >
-          <LogoGrupoTTDS className="h-6 sm:h-8 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
+          <LogoGrupoTTDS className="h-9 w-auto shrink-0 text-[#FFFFFF]" />
         </Link>
 
-        {/* Derecha: Únicamente los 3 ítems tanto en desktop como en móvil */}
-        <nav
-          className="flex items-center gap-2 sm:gap-6 md:gap-8 shrink-0"
-          aria-label="Navegación principal"
-        >
-          {/* 1. Tío Toro */}
-          <Link
-            href="/tio-toro"
-            className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.16em] sm:tracking-[0.22em] text-[#F5F5F0] hover:text-[#C8A97E] transition-colors duration-500 py-2 px-1 sm:px-2 min-h-[44px] flex items-center whitespace-nowrap"
-          >
-            Tío Toro
-          </Link>
-
-          {/* 2. Dragon Soul */}
-          <Link
-            href="/dragon-soul"
-            className="text-[10px] sm:text-xs font-sans uppercase tracking-[0.16em] sm:tracking-[0.22em] text-[#F5F5F0] hover:text-[#C8A97E] transition-colors duration-500 py-2 px-1 sm:px-2 min-h-[44px] flex items-center whitespace-nowrap"
-          >
-            Dragon Soul
-          </Link>
-
-          {/* 3. Botón Elegante Reservas */}
+        {/* Derecha: Botón de reservaciones píldora y menú de 3 líneas horizontales */}
+        <div className="flex items-center gap-4 shrink-0">
           <button
             type="button"
             onClick={onOpenReservation}
-            className="text-[10px] sm:text-xs font-sans font-medium uppercase tracking-[0.16em] sm:tracking-[0.22em] px-2.5 sm:px-4 py-1.5 sm:py-2 border border-[#C8A97E] text-[#C8A97E] hover:bg-[#C8A97E] hover:text-[#050505] transition-all duration-500 rounded-none whitespace-nowrap min-h-[38px] sm:min-h-[44px] flex items-center justify-center cursor-pointer shadow-sm"
+            className="bg-white text-[#161616] rounded-full px-5 py-2 text-sm font-medium whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer"
           >
-            Reservas
+            Reservations
           </button>
-        </nav>
+
+          <button
+            type="button"
+            onClick={onOpenReservation}
+            aria-label="Menú de navegación"
+            className="w-7 h-5 flex flex-col justify-between items-end cursor-pointer focus:outline-none"
+          >
+            <span className="h-[2px] w-full bg-white block" />
+            <span className="h-[2px] w-full bg-white block" />
+            <span className="h-[2px] w-full bg-white block" />
+          </button>
+        </div>
       </div>
     </header>
   );
 }
-

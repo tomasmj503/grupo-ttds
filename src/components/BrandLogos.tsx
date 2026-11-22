@@ -6,65 +6,55 @@ interface LogoProps {
 }
 
 /**
- * Logo oficial provisional de GRUPO TTDS
- * Estética arquitectónica, simétrica y editorial inspirada en Tao Group Hospitality.
+ * Logo oficial de GRUPO TTDS
+ * Estética editorial y de hospitalidad de lujo inspirada en Tao Group Hospitality.
+ * Blanco puro (#FFFFFF), trazo fino y elegante con dimensiones fijas explícitas.
  */
-export function LogoGrupoTTDS({ className = "h-8 w-auto text-[#F5F5F0]" }: LogoProps) {
+export function LogoGrupoTTDS({
+  className = "h-9 w-auto shrink-0",
+  showTagline = true,
+}: LogoProps) {
   return (
     <svg
-      viewBox="0 0 280 64"
+      viewBox="0 0 180 40"
+      width="180"
+      height="40"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
+      preserveAspectRatio="xMinYMid meet"
       aria-label="Grupo TTDS Logo"
     >
-      {/* Isotipo Arquitectónico TTDS */}
-      <g stroke="currentColor" strokeWidth="1.2">
-        {/* Monograma Geométrico Central */}
-        <path d="M18 14H38M28 14V50" strokeLinecap="square" />
-        <path d="M34 14H54M44 14V50" strokeLinecap="square" />
-        {/* Cuadro exterior fino de revista */}
-        <rect x="10" y="8" width="52" height="48" stroke="#C8A97E" strokeWidth="1" opacity="0.85" />
-        {/* Detalle en esquinas tipo corte de diamante */}
-        <path d="M10 16L18 8M62 16L54 8M10 48L18 56M62 48L54 56" stroke="#C8A97E" strokeWidth="0.8" />
-      </g>
-
       {/* Tipografía Editorial Grupo TTDS */}
       <text
-        x="78"
-        y="25"
-        fill="#C8A97E"
-        fontSize="8.5"
-        letterSpacing="0.32em"
-        fontFamily="var(--font-montserrat), sans-serif"
+        x="0"
+        y="21"
+        fill="#FFFFFF"
+        fontSize="17"
+        letterSpacing="0.22em"
+        style={{ letterSpacing: "0.22em" }}
+        fontFamily="var(--font-cormorant), 'Cormorant Garamond', Georgia, serif"
         fontWeight="500"
       >
-        GRUPO
+        GRUPO TTDS
       </text>
 
-      <text
-        x="78"
-        y="45"
-        fill="currentColor"
-        fontSize="19"
-        letterSpacing="0.2em"
-        fontFamily="var(--font-cormorant), Georgia, serif"
-        fontWeight="600"
-      >
-        T T D S
-      </text>
-
-      <text
-        x="79"
-        y="56"
-        fill="#9A9A95"
-        fontSize="6.5"
-        letterSpacing="0.26em"
-        fontFamily="var(--font-montserrat), sans-serif"
-        fontWeight="400"
-      >
-        HOSPITALITY & NIGHTLIFE
-      </text>
+      {/* Subtítulo Sutil */}
+      {showTagline && (
+        <text
+          x="1"
+          y="33"
+          fill="#FFFFFF"
+          opacity="0.7"
+          fontSize="6"
+          letterSpacing="0.32em"
+          style={{ letterSpacing: "0.32em" }}
+          fontFamily="var(--font-montserrat), Montserrat, sans-serif"
+          fontWeight="400"
+        >
+          HOSPITALITY &amp; NIGHTLIFE
+        </text>
+      )}
     </svg>
   );
 }
