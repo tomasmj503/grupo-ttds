@@ -19,8 +19,14 @@ export default function HomePage() {
       <main className="flex-1 flex flex-col">
         <HeroVideo />
 
-        {/* 3. Galería Marquee Infinita hacia la Derecha con Lightbox */}
+        {/* 3. Ancla de navegación: Tío Toro */}
+        <div id="tio-toro" />
+
+        {/* 4. Galería Marquee Infinita hacia la Derecha con Lightbox */}
         <MarqueeGallery />
+
+        {/* 5. Ancla de navegación: Dragon Soul */}
+        <div id="dragon-soul" />
       </main>
 
       {/* 4. Pie de Página Inteligente */}

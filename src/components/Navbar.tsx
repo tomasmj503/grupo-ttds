@@ -113,13 +113,15 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
             {/* Enlaces en escritorio (hidden md:flex): Dragon Soul y Tío Toro antes de Reservaciones */}
             <nav className="hidden md:flex items-center gap-7">
               <Link
-                href="/tio-toro"
+                href="/#tio-toro"
+                prefetch={false}
                 className="text-sm font-medium tracking-wide text-neutral-300 hover:text-white transition-colors"
               >
                 Tío Toro
               </Link>
               <Link
-                href="/dragon-soul"
+                href="/#dragon-soul"
+                prefetch={false}
                 className="text-sm font-medium tracking-wide text-neutral-300 hover:text-white transition-colors"
               >
                 Dragon Soul
@@ -231,7 +233,8 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
           {/* Filas de navegación + botón Reservaciones en flujo normal */}
           <nav className="flex flex-col px-6 pt-2 pb-8">
             <Link
-              href="/tio-toro"
+              href="/#tio-toro"
+              prefetch={false}
               onClick={() => setIsMobileMenuOpen(false)}
               className="py-4 text-base font-normal text-white/90 hover:text-white transition-colors border-b border-white/10 focus:outline-none"
               style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
@@ -240,7 +243,8 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
             </Link>
 
             <Link
-              href="/dragon-soul"
+              href="/#dragon-soul"
+              prefetch={false}
               onClick={() => setIsMobileMenuOpen(false)}
               className="py-4 text-base font-normal text-white/90 hover:text-white transition-colors border-b border-white/10 focus:outline-none"
               style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
