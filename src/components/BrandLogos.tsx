@@ -7,55 +7,45 @@ interface LogoProps {
 
 /**
  * Logo oficial de GRUPO TTDS
- * Estética editorial y de hospitalidad de lujo inspirada en Tao Group Hospitality.
- * Blanco puro (#FFFFFF), trazo fino y elegante con dimensiones fijas explícitas.
+ * Estética editorial de lujo. Blanco puro (#FFFFFF), sin dorados.
+ * TTDS arriba en Cormorant Garamond, GRUPO debajo en espaciado sutil.
  */
 export function LogoGrupoTTDS({
-  className = "h-9 w-auto shrink-0",
-  showTagline = true,
+  className = "h-10 w-auto shrink-0",
 }: LogoProps) {
   return (
-    <svg
-      viewBox="0 0 180 40"
-      width="180"
-      height="40"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-      preserveAspectRatio="xMinYMid meet"
-      aria-label="Grupo TTDS Logo"
+    <span
+      className={`inline-flex flex-col items-start leading-none select-none ${className}`}
+      aria-label="Grupo TTDS"
     >
-      {/* Tipografía Editorial Grupo TTDS */}
-      <text
-        x="0"
-        y="21"
-        fill="#FFFFFF"
-        fontSize="17"
-        letterSpacing="0.22em"
-        style={{ letterSpacing: "0.22em" }}
-        fontFamily="var(--font-cormorant), 'Cormorant Garamond', Georgia, serif"
-        fontWeight="500"
+      {/* TTDS — tipografía editorial Cormorant */}
+      <span
+        style={{
+          fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif",
+          fontWeight: 500,
+          fontSize: "1.35rem",
+          letterSpacing: "0.14em",
+          color: "#FFFFFF",
+          lineHeight: 1,
+        }}
       >
-        GRUPO TTDS
-      </text>
-
-      {/* Subtítulo Sutil */}
-      {showTagline && (
-        <text
-          x="1"
-          y="33"
-          fill="#FFFFFF"
-          opacity="0.7"
-          fontSize="6"
-          letterSpacing="0.32em"
-          style={{ letterSpacing: "0.32em" }}
-          fontFamily="var(--font-montserrat), Montserrat, sans-serif"
-          fontWeight="400"
-        >
-          HOSPITALITY &amp; NIGHTLIFE
-        </text>
-      )}
-    </svg>
+        TTDS
+      </span>
+      {/* GRUPO — subtítulo muy sutil */}
+      <span
+        style={{
+          fontFamily: "var(--font-jakarta), 'Plus Jakarta Sans', sans-serif",
+          fontWeight: 400,
+          fontSize: "10px",
+          letterSpacing: "0.28em",
+          color: "#FFFFFF",
+          lineHeight: 1,
+          marginTop: "3px",
+        }}
+      >
+        GRUPO
+      </span>
+    </span>
   );
 }
 
@@ -117,7 +107,7 @@ export function LogoTioToro({ className = "h-8 w-auto text-[#F5F5F0]" }: LogoPro
         fill="#C8A97E"
         fontSize="7"
         letterSpacing="0.28em"
-        fontFamily="var(--font-montserrat), sans-serif"
+        fontFamily="var(--font-jakarta), 'Plus Jakarta Sans', sans-serif"
         fontWeight="500"
       >
         BURGER & BRASA · NORMANDÍA
@@ -180,7 +170,7 @@ export function LogoDragonSoul({ className = "h-8 w-auto text-[#F5F5F0]" }: Logo
         fill="#C8A97E"
         fontSize="7"
         letterSpacing="0.28em"
-        fontFamily="var(--font-montserrat), sans-serif"
+        fontFamily="var(--font-jakarta), 'Plus Jakarta Sans', sans-serif"
         fontWeight="500"
       >
         SUSHI BAR & LOUNGE
