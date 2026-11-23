@@ -1,9 +1,14 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { ExternalLink, ChevronDown } from "lucide-react";
-import { BRANDS, HOME_HERO_VIDEO } from "@/config/site";
+import { BRANDS } from "@/config/site";
 import { LogoTioToro, LogoDragonSoul } from "./BrandLogos";
+
+// Fotografía gastronómica de ingredientes — estética limpia y clara/media
+const HERO_PHOTO_URL =
+  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=85";
 
 export function HeroVideo() {
   const scrollToGallery = () => {
@@ -15,21 +20,19 @@ export function HeroVideo() {
 
   return (
     <section className="h-[100svh] w-full relative overflow-hidden bg-[#050505] flex flex-col justify-between items-center select-none">
-      {/* Video de fondo en bucle silencioso */}
-      <video
-        autoPlay
-        loop
-        muted
-        playsInline
-        poster={HOME_HERO_VIDEO.posterUrl}
-        className="absolute inset-0 w-full h-full object-cover scale-105 filter brightness-[0.65] contrast-[1.08] transition-opacity duration-1000"
-      >
-        <source src={HOME_HERO_VIDEO.videoUrl} type="video/mp4" />
-      </video>
+      {/* Fotografía gastronómica de fondo */}
+      <Image
+        src={HERO_PHOTO_URL}
+        alt="Fotografía gastronómica — ingredientes frescos de alta cocina"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover scale-105 brightness-[0.82] contrast-[1.05]"
+      />
 
-      {/* Gradiente oscuro editorial estilo Tao Group Hospitality */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-[#050505] pointer-events-none" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(5,5,5,0.7)_100%)] pointer-events-none" />
+      {/* Gradiente editorial de profundidad — sutil arriba para imagen limpia */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/35 via-black/15 to-black/60 pointer-events-none" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(5,5,5,0.6)_100%)] pointer-events-none" />
 
       {/* Cabecera / Espacio superior para balance */}
       <div className="pt-28 sm:pt-36 z-10 text-center px-4 max-w-4xl mx-auto">
