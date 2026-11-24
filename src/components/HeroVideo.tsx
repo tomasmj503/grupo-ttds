@@ -51,7 +51,7 @@ export function HeroVideo() {
       {/* Grupo de botones en la zona inferior-media con desplazamiento hacia abajo */}
       <div
         className="absolute inset-x-0 z-30 pointer-events-auto flex flex-row items-center justify-center gap-3 sm:gap-4 px-5"
-        style={{ top: "calc(50% + 72px)", transform: "translateY(-50%)" }}
+        style={{ top: "calc(50% + 50px)", transform: "translateY(-50%)" }}
       >
         <a
           href={TIO_TORO_MENU_URL}

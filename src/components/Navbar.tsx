@@ -109,7 +109,7 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
           </Link>
 
           {/* Derecha: Enlaces de escritorio, botón píldora Reservations con dropdown y botón hamburguesa en móvil */}
-          <div className="flex items-center gap-4 sm:gap-6 shrink-0" style={{ fontFamily: "var(--font-jakarta), sans-serif" }}>
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0" style={{ fontFamily: "var(--font-jakarta), sans-serif" }}>
             {/* Enlaces en escritorio (hidden md:flex): Dragon Soul y Tío Toro antes de Reservaciones */}
             <nav className="hidden md:flex items-center gap-7">
               <Link
@@ -135,7 +135,7 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
                 onClick={() => setIsReservationOpen((prev) => !prev)}
                 aria-expanded={isReservationOpen}
                 aria-haspopup="true"
-                className="bg-white text-[#0A0A0A] rounded-full px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-medium whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer focus:outline-none"
+                className="bg-white text-[#0A0A0A] rounded-full px-6 sm:px-7 py-3 sm:py-3.5 text-sm font-normal tracking-wide whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer focus:outline-none"
               >
                 Reservaciones
               </button>
