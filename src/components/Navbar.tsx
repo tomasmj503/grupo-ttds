@@ -93,9 +93,9 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 bg-[#050505] border-b transition-all duration-300 ${isScrolled
-          ? "border-white/10"
-          : "border-transparent"
+        className={`fixed top-0 left-0 right-0 z-50 border-b transition-all duration-300 ${isScrolled
+          ? "bg-[#050505]/95 backdrop-blur-md border-white/10"
+          : "bg-transparent border-transparent"
           }`}
       >
         <div className="px-5 sm:px-8 py-2.5 sm:py-3 max-w-7xl mx-auto flex items-center justify-between gap-4">
