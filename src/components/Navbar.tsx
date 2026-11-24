@@ -135,7 +135,7 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
                 onClick={() => setIsReservationOpen((prev) => !prev)}
                 aria-expanded={isReservationOpen}
                 aria-haspopup="true"
-                className="bg-white text-[#0A0A0A] rounded-full px-5 sm:px-6 py-2.5 sm:py-2.5 text-xs sm:text-sm font-normal tracking-wide whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer focus:outline-none"
+                className="bg-white text-[#0A0A0A] rounded-full px-6 sm:px-7 py-3 text-xs sm:text-sm font-normal tracking-wide whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer focus:outline-none"
               >
                 Reservaciones
               </button>

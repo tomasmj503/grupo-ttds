@@ -110,7 +110,7 @@ export function MarqueeGallery() {
     >
       {/* Cabecera Editorial */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-8 sm:mb-12 text-center">
-        <h2 className="text-xs sm:text-sm md:text-base font-sans uppercase tracking-[0.12em] sm:tracking-[0.2em] text-[#C8A97E] font-medium">
+        <h2 className="text-sm sm:text-base font-sans font-normal tracking-wide text-white">
           Hamburguesas artesanales · Comida asiática y sushi · Coctelería
         </h2>
       </div>
@@ -143,14 +143,14 @@ export function MarqueeGallery() {
                   href={item.instagramUrl || "https://instagram.com"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative w-[290px] sm:w-[360px] md:w-[420px] lg:w-[460px] aspect-[4/5] shrink-0 bg-[#0C0C0C] border border-white/15 overflow-hidden block select-none"
+                  className="group relative w-[235px] sm:w-[270px] md:w-[300px] lg:w-[320px] aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 overflow-hidden block select-none"
                   aria-label={`${item.alt} - Abrir Instagram`}
                 >
                   <Image
                     src={item.imageUrl}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 640px) 290px, (max-width: 768px) 360px, (max-width: 1024px) 420px, 460px"
+                    sizes="(max-width: 640px) 235px, (max-width: 768px) 270px, (max-width: 1024px) 300px, 320px"
                     className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
@@ -178,14 +178,14 @@ export function MarqueeGallery() {
                 type="button"
                 key={`${item.id}-${index}`}
                 onClick={() => setLightboxIndex(originalIndex)}
-                className="group relative w-[290px] sm:w-[360px] md:w-[420px] lg:w-[460px] aspect-[4/5] shrink-0 bg-[#0C0C0C] border border-white/15 overflow-hidden text-left cursor-pointer select-none"
+                className="group relative w-[235px] sm:w-[270px] md:w-[300px] lg:w-[320px] aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 overflow-hidden text-left cursor-pointer select-none"
                 aria-label={`${item.alt} - Ver en visor pantalla completa`}
               >
                 <Image
                   src={item.imageUrl}
                   alt={item.alt}
                   fill
-                  sizes="(max-width: 640px) 290px, (max-width: 768px) 360px, (max-width: 1024px) 420px, 460px"
+                  sizes="(max-width: 640px) 235px, (max-width: 768px) 270px, (max-width: 1024px) 300px, 320px"
                   className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
