@@ -105,14 +105,17 @@ export function MarqueeGallery() {
   return (
     <section
       id="galeria-editorial"
-      className="relative w-full bg-[#050505] py-16 sm:py-24 overflow-hidden border-t border-b border-white/10"
+      className="relative w-full bg-[#050505] py-16 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
       aria-label="Galería fotográfica nocturna"
     >
       {/* Cabecera Editorial */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-8 sm:mb-12 text-center">
-        <h2 className="text-sm sm:text-base font-sans font-normal tracking-wide text-white">
-          Hamburguesas artesanales · Comida asiática y sushi · Coctelería
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-10 sm:mb-12 text-center space-y-2 sm:space-y-2.5">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-normal tracking-tight text-white">
+          Tío Toro y Dragon Soul
         </h2>
+        <p className="text-xs sm:text-sm font-sans font-normal tracking-wide text-white/80">
+          Hamburguesas Artesanales, Sushi, Comida Asiática
+        </p>
       </div>
 
       {/* Contenedor de la Cinta Horizontal Marquee */}
@@ -143,14 +146,14 @@ export function MarqueeGallery() {
                   href={item.instagramUrl || "https://instagram.com"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative w-[235px] sm:w-[270px] md:w-[300px] lg:w-[320px] aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 overflow-hidden block select-none"
+                  className="group relative w-[270px] sm:w-[320px] md:w-[360px] lg:w-[400px] aspect-[4/5] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden block select-none"
                   aria-label={`${item.alt} - Abrir Instagram`}
                 >
                   <Image
                     src={item.imageUrl}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 640px) 235px, (max-width: 768px) 270px, (max-width: 1024px) 300px, 320px"
+                    sizes="(max-width: 640px) 270px, (max-width: 768px) 320px, (max-width: 1024px) 360px, 400px"
                     className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
@@ -178,14 +181,14 @@ export function MarqueeGallery() {
                 type="button"
                 key={`${item.id}-${index}`}
                 onClick={() => setLightboxIndex(originalIndex)}
-                className="group relative w-[235px] sm:w-[270px] md:w-[300px] lg:w-[320px] aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 overflow-hidden text-left cursor-pointer select-none"
+                className="group relative w-[270px] sm:w-[320px] md:w-[360px] lg:w-[400px] aspect-[4/5] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden text-left cursor-pointer select-none"
                 aria-label={`${item.alt} - Ver en visor pantalla completa`}
               >
                 <Image
                   src={item.imageUrl}
                   alt={item.alt}
                   fill
-                  sizes="(max-width: 640px) 235px, (max-width: 768px) 270px, (max-width: 1024px) 300px, 320px"
+                  sizes="(max-width: 640px) 270px, (max-width: 768px) 320px, (max-width: 1024px) 360px, 400px"
                   className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
