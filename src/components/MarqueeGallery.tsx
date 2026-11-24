@@ -94,7 +94,7 @@ export function MarqueeGallery() {
     setIsUserPaused(true);
 
     const firstCard = track.firstElementChild as HTMLElement | null;
-    const cardWidth = firstCard ? firstCard.offsetWidth : 215;
+    const cardWidth = firstCard ? firstCard.offsetWidth : 220;
     const gap = window.innerWidth < 640 ? 20 : 24;
     const step = cardWidth + gap;
 
@@ -194,7 +194,7 @@ export function MarqueeGallery() {
   return (
     <section
       id="galeria-editorial"
-      className="relative w-full bg-[#141414] py-12 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
+      className="relative w-full bg-[#232222] py-12 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
       aria-label="Galería fotográfica nocturna"
     >
       {/* Cabecera Editorial */}
@@ -249,8 +249,8 @@ export function MarqueeGallery() {
         onTouchEnd={handleTouchEnd}
       >
         {/* Sombras de desvanecimiento lateral editorial (solo sm+ para bleed limpio en móvil) */}
-        <div className="hidden sm:block absolute left-0 top-0 bottom-0 sm:w-20 md:w-28 bg-gradient-to-r from-[#141414] to-transparent z-10 pointer-events-none" />
-        <div className="hidden sm:block absolute right-0 top-0 bottom-0 sm:w-20 md:w-28 bg-gradient-to-l from-[#141414] to-transparent z-10 pointer-events-none" />
+        <div className="hidden sm:block absolute left-0 top-0 bottom-0 sm:w-20 md:w-28 bg-gradient-to-r from-[#232222] to-transparent z-10 pointer-events-none" />
+        <div className="hidden sm:block absolute right-0 top-0 bottom-0 sm:w-20 md:w-28 bg-gradient-to-l from-[#232222] to-transparent z-10 pointer-events-none" />
 
         {/* Pista de imágenes en movimiento hacia la derecha */}
         <div
@@ -271,14 +271,14 @@ export function MarqueeGallery() {
                   onClick={(e) => {
                     if (touchStateRef.current.hasMoved) e.preventDefault();
                   }}
-                  className="group relative w-[215px] h-[420px] sm:w-[250px] sm:h-auto sm:aspect-[9/16] md:w-[290px] lg:w-[320px] shrink-0 bg-[#0C0C0C] sm:border sm:border-white/15 rounded-[10px] sm:rounded-2xl overflow-hidden block select-none"
+                  className="group relative w-[220px] h-[445px] sm:w-[300px] sm:h-[475px] md:w-[384px] md:h-[606px] shrink-0 bg-[#0C0C0C] sm:border sm:border-white/15 rounded-[10px] sm:rounded-2xl overflow-hidden block select-none"
                   aria-label={`${item.alt} - Abrir Instagram`}
                 >
                   <Image
                     src={item.imageUrl}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 640px) 215px, (max-width: 768px) 250px, (max-width: 1024px) 290px, 320px"
+                    sizes="(max-width: 640px) 220px, (max-width: 768px) 300px, 384px"
                     className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.95] contrast-[1.03]"
                   />
                   <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
@@ -310,14 +310,14 @@ export function MarqueeGallery() {
                     setLightboxIndex(originalIndex);
                   }
                 }}
-                className="group relative w-[215px] h-[420px] sm:w-[250px] sm:h-auto sm:aspect-[9/16] md:w-[290px] lg:w-[320px] shrink-0 bg-[#0C0C0C] sm:border sm:border-white/15 rounded-[10px] sm:rounded-2xl overflow-hidden text-left cursor-pointer select-none"
+                className="group relative w-[220px] h-[445px] sm:w-[300px] sm:h-[475px] md:w-[384px] md:h-[606px] shrink-0 bg-[#0C0C0C] sm:border sm:border-white/15 rounded-[10px] sm:rounded-2xl overflow-hidden text-left cursor-pointer select-none"
                 aria-label={`${item.alt} - Ver en visor pantalla completa`}
               >
                 <Image
                   src={item.imageUrl}
                   alt={item.alt}
                   fill
-                  sizes="(max-width: 640px) 215px, (max-width: 768px) 250px, (max-width: 1024px) 290px, 320px"
+                  sizes="(max-width: 640px) 220px, (max-width: 768px) 300px, 384px"
                   className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.95] contrast-[1.03]"
                 />
                 <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
