@@ -93,19 +93,19 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-            ? "bg-[#161616]/90 backdrop-blur-md border-b border-white/10"
-            : "bg-transparent border-transparent shadow-none"
+        className={`fixed top-0 left-0 right-0 z-50 bg-[#050505] border-b transition-all duration-300 ${isScrolled
+          ? "border-white/10"
+          : "border-transparent"
           }`}
       >
-        <div className="px-5 sm:px-8 py-4 max-w-7xl mx-auto flex items-center justify-between gap-4">
+        <div className="px-5 sm:px-8 py-2.5 sm:py-3 max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Izquierda: Logo Grupo TTDS */}
           <Link
             href="/"
             className="flex items-center shrink-0 focus:outline-none"
             aria-label="Ir a página de inicio Grupo TTDS"
           >
-            <LogoGrupoTTDS className="h-10 w-auto shrink-0" />
+            <LogoGrupoTTDS className="h-9 w-auto shrink-0" />
           </Link>
 
           {/* Derecha: Enlaces de escritorio, botón píldora Reservations con dropdown y botón hamburguesa en móvil */}
@@ -135,7 +135,7 @@ export function Navbar({ onOpenReservation }: NavbarProps) {
                 onClick={() => setIsReservationOpen((prev) => !prev)}
                 aria-expanded={isReservationOpen}
                 aria-haspopup="true"
-                className="bg-white text-[#0A0A0A] rounded-full px-6 sm:px-7 py-3 sm:py-3.5 text-sm font-normal tracking-wide whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer focus:outline-none"
+                className="bg-white text-[#0A0A0A] rounded-full px-5 sm:px-6 py-2.5 sm:py-2.5 text-xs sm:text-sm font-normal tracking-wide whitespace-nowrap shadow-sm hover:bg-neutral-100 transition-colors cursor-pointer focus:outline-none"
               >
                 Reservaciones
               </button>
