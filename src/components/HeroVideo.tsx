@@ -48,10 +48,10 @@ export function HeroVideo() {
       {/* Gradiente sutil para asegurar lectura limpia sin tapar el video */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/65 pointer-events-none z-10" />
 
-      {/* Grupo de botones centrado con leve desplazamiento hacia abajo */}
+      {/* Grupo de botones en la zona inferior-media con desplazamiento hacia abajo */}
       <div
         className="absolute inset-x-0 z-30 pointer-events-auto flex flex-row items-center justify-center gap-3 sm:gap-4 px-5"
-        style={{ top: "calc(50% + 28px)", transform: "translateY(-50%)" }}
+        style={{ top: "calc(50% + 72px)", transform: "translateY(-50%)" }}
       >
         <a
           href={TIO_TORO_MENU_URL}
