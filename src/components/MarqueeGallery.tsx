@@ -105,7 +105,7 @@ export function MarqueeGallery() {
   return (
     <section
       id="galeria-editorial"
-      className="relative w-full bg-[#050505] py-16 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
+      className="relative w-full bg-[#141414] py-16 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
       aria-label="Galería fotográfica nocturna"
     >
       {/* Cabecera Editorial */}
@@ -114,7 +114,7 @@ export function MarqueeGallery() {
           Tío Toro · Dragon Soul
         </h2>
         <p className="text-xs sm:text-sm font-sans font-normal tracking-wide text-white/80">
-          Hamburguesas Artesanales · Sushi y Comida Asiática
+          Hamburguesas Artesanales · Sushi, Comida Asiática
         </p>
       </div>
 
@@ -127,8 +127,8 @@ export function MarqueeGallery() {
         onTouchEnd={() => setIsPaused(false)}
       >
         {/* Sombras de desvanecimiento lateral editorial */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-r from-[#141414] to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-l from-[#141414] to-transparent z-10 pointer-events-none" />
 
         {/* Pista de imágenes en movimiento hacia la derecha */}
         <div
@@ -146,14 +146,14 @@ export function MarqueeGallery() {
                   href={item.instagramUrl || "https://instagram.com"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative w-[325px] sm:w-[340px] md:w-[370px] lg:w-[400px] aspect-[4/5] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden block select-none"
+                  className="group relative w-[235px] sm:w-[265px] md:w-[360px] lg:w-[400px] aspect-[2/3] md:aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden block select-none"
                   aria-label={`${item.alt} - Abrir Instagram`}
                 >
                   <Image
                     src={item.imageUrl}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 640px) 325px, (max-width: 768px) 340px, (max-width: 1024px) 370px, 400px"
+                    sizes="(max-width: 640px) 235px, (max-width: 768px) 265px, (max-width: 1024px) 360px, 400px"
                     className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
@@ -181,14 +181,14 @@ export function MarqueeGallery() {
                 type="button"
                 key={`${item.id}-${index}`}
                 onClick={() => setLightboxIndex(originalIndex)}
-                className="group relative w-[325px] sm:w-[340px] md:w-[370px] lg:w-[400px] aspect-[4/5] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden text-left cursor-pointer select-none"
+                className="group relative w-[235px] sm:w-[265px] md:w-[360px] lg:w-[400px] aspect-[2/3] md:aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden text-left cursor-pointer select-none"
                 aria-label={`${item.alt} - Ver en visor pantalla completa`}
               >
                 <Image
                   src={item.imageUrl}
                   alt={item.alt}
                   fill
-                  sizes="(max-width: 640px) 325px, (max-width: 768px) 340px, (max-width: 1024px) 370px, 400px"
+                  sizes="(max-width: 640px) 235px, (max-width: 768px) 265px, (max-width: 1024px) 360px, 400px"
                   className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
