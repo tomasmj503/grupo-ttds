@@ -1,56 +1,72 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
+import { X, ChevronLeft, ChevronRight, Eye, Pause, Play } from "lucide-react";
 import { HOME_MARQUEE_GALLERY, MarqueeGalleryItem } from "@/config/site";
 import { InstagramIcon } from "./BrandLogos";
 
 export function MarqueeGallery() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isUserPaused, setIsUserPaused] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);
   const positionRef = useRef<number>(0);
   const animationFrameRef = useRef<number | null>(null);
   const isPausedRef = useRef<boolean>(false);
+  const halfWidthRef = useRef<number>(0);
+  const stepTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Estado de arrastre táctil para swipe en móvil
+  const touchStateRef = useRef({
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    isDragging: false,
+    hasMoved: false,
+  });
 
   // Duplicamos la galería para el bucle infinito sin cortes
   const duplicatedItems = [...HOME_MARQUEE_GALLERY, ...HOME_MARQUEE_GALLERY];
 
+  const wrapPosition = useCallback((pos: number) => {
+    const half = halfWidthRef.current;
+    if (!half) return pos;
+    let wrapped = pos;
+    while (wrapped >= 0) wrapped -= half;
+    while (wrapped < -half) wrapped += half;
+    return wrapped;
+  }, []);
+
   // Sincronizar referencia de pausa
   useEffect(() => {
-    isPausedRef.current = isPaused || lightboxIndex !== null;
-  }, [isPaused, lightboxIndex]);
+    isPausedRef.current = isHovered || isUserPaused || lightboxIndex !== null;
+  }, [isHovered, isUserPaused, lightboxIndex]);
 
   // Movimiento automático y fluido hacia la DERECHA usando requestAnimationFrame
   useEffect(() => {
     const track = trackRef.current;
     if (!track) return;
 
-    let halfWidth = track.scrollWidth / 2;
-
     const updateHalfWidth = () => {
-      if (track) halfWidth = track.scrollWidth / 2;
+      if (track) {
+        halfWidthRef.current = track.scrollWidth / 2;
+      }
     };
 
+    updateHalfWidth();
     window.addEventListener("resize", updateHalfWidth);
 
     // Comenzar en el límite izquierdo para desplazarse hacia la derecha
-    if (positionRef.current === 0) {
-      positionRef.current = -halfWidth;
+    if (positionRef.current === 0 && halfWidthRef.current > 0) {
+      positionRef.current = -halfWidthRef.current;
     }
 
     const speed = 0.55; // Velocidad pausada, sedosa y editorial
 
     const animate = () => {
-      if (!isPausedRef.current && track) {
-        positionRef.current += speed;
-
-        // Cuando llega a 0 (desplazado completamente a la derecha), reinicia a -halfWidth
-        if (positionRef.current >= 0) {
-          positionRef.current = -halfWidth;
-        }
-
+      if (!isPausedRef.current && track && !touchStateRef.current.isDragging) {
+        positionRef.current = wrapPosition(positionRef.current + speed);
         track.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
       }
 
@@ -64,8 +80,81 @@ export function MarqueeGallery() {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
       }
+      if (stepTimeoutRef.current) {
+        clearTimeout(stepTimeoutRef.current);
+      }
     };
-  }, []);
+  }, [wrapPosition]);
+
+  // Avance/retroceso manual por tarjeta (estilo controles TAO Downtown)
+  const stepCarousel = (direction: "prev" | "next") => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    setIsUserPaused(true);
+
+    const firstCard = track.firstElementChild as HTMLElement | null;
+    const cardWidth = firstCard ? firstCard.offsetWidth : 215;
+    const gap = window.innerWidth < 640 ? 20 : 24;
+    const step = cardWidth + gap;
+
+    const delta = direction === "prev" ? step : -step;
+    positionRef.current = wrapPosition(positionRef.current + delta);
+
+    if (stepTimeoutRef.current) {
+      clearTimeout(stepTimeoutRef.current);
+    }
+
+    track.style.transition = "transform 380ms cubic-bezier(0.22, 1, 0.36, 1)";
+    track.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+
+    stepTimeoutRef.current = setTimeout(() => {
+      if (track) {
+        track.style.transition = "";
+      }
+    }, 390);
+  };
+
+  // Manejadores táctiles para swipe horizontal fluido en móvil
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    const track = trackRef.current;
+    if (track) {
+      track.style.transition = "";
+    }
+    touchStateRef.current = {
+      startX: touch.clientX,
+      startY: touch.clientY,
+      lastX: touch.clientX,
+      isDragging: true,
+      hasMoved: false,
+    };
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!touchStateRef.current.isDragging) return;
+    const touch = e.touches[0];
+    if (!touch) return;
+
+    const totalDx = Math.abs(touch.clientX - touchStateRef.current.startX);
+    const totalDy = Math.abs(touch.clientY - touchStateRef.current.startY);
+
+    // Solo interceptar si el gesto es claramente horizontal
+    if (totalDx > 6 && totalDx > totalDy) {
+      touchStateRef.current.hasMoved = true;
+      const deltaX = touch.clientX - touchStateRef.current.lastX;
+      touchStateRef.current.lastX = touch.clientX;
+      positionRef.current = wrapPosition(positionRef.current + deltaX);
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchStateRef.current.isDragging = false;
+  };
 
   // Manejo de teclado para el visor Lightbox
   useEffect(() => {
@@ -105,12 +194,12 @@ export function MarqueeGallery() {
   return (
     <section
       id="galeria-editorial"
-      className="relative w-full bg-[#141414] py-16 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
+      className="relative w-full bg-[#141414] py-12 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
       aria-label="Galería fotográfica nocturna"
     >
       {/* Cabecera Editorial */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-10 sm:mb-12 text-center space-y-2 sm:space-y-2.5">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-normal tracking-tight text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-5 sm:mb-8 text-center space-y-1.5 sm:space-y-2.5">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-light sm:font-normal tracking-tight text-white">
           Tío Toro · Dragon Soul
         </h2>
         <p className="text-xs sm:text-sm font-sans font-normal tracking-wide text-white/80">
@@ -118,22 +207,55 @@ export function MarqueeGallery() {
         </p>
       </div>
 
+      {/* Controles superiores derechos estilo TAO Downtown (<, >, Pausa/Play) */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-4 flex items-center justify-end gap-2">
+        <button
+          type="button"
+          onClick={() => stepCarousel("prev")}
+          className="w-8 h-8 flex items-center justify-center text-white/75 hover:text-white transition-colors cursor-pointer"
+          aria-label="Tarjeta anterior"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => stepCarousel("next")}
+          className="w-8 h-8 flex items-center justify-center text-white/75 hover:text-white transition-colors cursor-pointer"
+          aria-label="Tarjeta siguiente"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={() => setIsUserPaused((prev) => !prev)}
+          className="w-8 h-8 rounded-full border border-white/30 hover:border-white/70 flex items-center justify-center text-white/85 hover:text-white transition-colors cursor-pointer"
+          aria-label={isUserPaused ? "Reanudar galería" : "Pausar galería"}
+        >
+          {isUserPaused ? (
+            <Play className="w-3.5 h-3.5 fill-current ml-0.5" />
+          ) : (
+            <Pause className="w-3.5 h-3.5" />
+          )}
+        </button>
+      </div>
+
       {/* Contenedor de la Cinta Horizontal Marquee */}
       <div
-        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing"
-        onMouseEnter={() => setIsPaused(true)}
-        onMouseLeave={() => setIsPaused(false)}
-        onTouchStart={() => setIsPaused(true)}
-        onTouchEnd={() => setIsPaused(false)}
+        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
-        {/* Sombras de desvanecimiento lateral editorial */}
-        <div className="absolute left-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-r from-[#141414] to-transparent z-10 pointer-events-none" />
-        <div className="absolute right-0 top-0 bottom-0 w-12 sm:w-28 bg-gradient-to-l from-[#141414] to-transparent z-10 pointer-events-none" />
+        {/* Sombras de desvanecimiento lateral editorial (solo sm+ para bleed limpio en móvil) */}
+        <div className="hidden sm:block absolute left-0 top-0 bottom-0 sm:w-20 md:w-28 bg-gradient-to-r from-[#141414] to-transparent z-10 pointer-events-none" />
+        <div className="hidden sm:block absolute right-0 top-0 bottom-0 sm:w-20 md:w-28 bg-gradient-to-l from-[#141414] to-transparent z-10 pointer-events-none" />
 
         {/* Pista de imágenes en movimiento hacia la derecha */}
         <div
           ref={trackRef}
-          className="flex gap-4 sm:gap-6 will-change-transform"
+          className="flex gap-5 sm:gap-6 will-change-transform"
           style={{ width: "max-content" }}
         >
           {duplicatedItems.map((item, index) => {
@@ -146,25 +268,28 @@ export function MarqueeGallery() {
                   href={item.instagramUrl || "https://instagram.com"}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group relative w-[235px] sm:w-[265px] md:w-[360px] lg:w-[400px] aspect-[2/3] md:aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden block select-none"
+                  onClick={(e) => {
+                    if (touchStateRef.current.hasMoved) e.preventDefault();
+                  }}
+                  className="group relative w-[215px] h-[420px] sm:w-[265px] sm:h-auto sm:aspect-[2/3] md:w-[360px] lg:w-[400px] md:aspect-[3/4] shrink-0 bg-[#0C0C0C] sm:border sm:border-white/15 rounded-[10px] sm:rounded-2xl overflow-hidden block select-none"
                   aria-label={`${item.alt} - Abrir Instagram`}
                 >
                   <Image
                     src={item.imageUrl}
                     alt={item.alt}
                     fill
-                    sizes="(max-width: 640px) 235px, (max-width: 768px) 265px, (max-width: 1024px) 360px, 400px"
-                    className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
+                    sizes="(max-width: 640px) 215px, (max-width: 768px) 265px, (max-width: 1024px) 360px, 400px"
+                    className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.95] contrast-[1.03]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
+                  <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
 
                   {/* Badge de Instagram en la esquina superior derecha */}
-                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/70 backdrop-blur-md border border-white/20 group-hover:border-[#C8A97E] text-white group-hover:text-[#C8A97E] p-2 transition-all duration-500 rounded-none shadow-md">
+                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/50 sm:bg-black/70 backdrop-blur-md sm:border sm:border-white/20 group-hover:border-[#C8A97E] text-white group-hover:text-[#C8A97E] p-1.5 sm:p-2 transition-all duration-500 rounded-full sm:rounded-none shadow-md">
                     <InstagramIcon className="w-4 h-4" />
                   </div>
 
-                  {/* Pie de foto editorial con indicación */}
-                  <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 flex flex-col justify-end">
+                  {/* Pie de foto editorial (visible en sm+, limpio en móvil) */}
+                  <div className="hidden sm:flex absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 flex-col justify-end">
                     <span className="text-[9px] uppercase tracking-[0.22em] text-[#C8A97E] font-medium font-sans mb-1 flex items-center gap-1.5">
                       <InstagramIcon className="w-3 h-3" /> VER EN INSTAGRAM
                     </span>
@@ -180,26 +305,30 @@ export function MarqueeGallery() {
               <button
                 type="button"
                 key={`${item.id}-${index}`}
-                onClick={() => setLightboxIndex(originalIndex)}
-                className="group relative w-[235px] sm:w-[265px] md:w-[360px] lg:w-[400px] aspect-[2/3] md:aspect-[3/4] shrink-0 bg-[#0C0C0C] border border-white/15 rounded-2xl overflow-hidden text-left cursor-pointer select-none"
+                onClick={() => {
+                  if (!touchStateRef.current.hasMoved) {
+                    setLightboxIndex(originalIndex);
+                  }
+                }}
+                className="group relative w-[215px] h-[420px] sm:w-[265px] sm:h-auto sm:aspect-[2/3] md:w-[360px] lg:w-[400px] md:aspect-[3/4] shrink-0 bg-[#0C0C0C] sm:border sm:border-white/15 rounded-[10px] sm:rounded-2xl overflow-hidden text-left cursor-pointer select-none"
                 aria-label={`${item.alt} - Ver en visor pantalla completa`}
               >
                 <Image
                   src={item.imageUrl}
                   alt={item.alt}
                   fill
-                  sizes="(max-width: 640px) 235px, (max-width: 768px) 265px, (max-width: 1024px) 360px, 400px"
-                  className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.9] contrast-[1.05]"
+                  sizes="(max-width: 640px) 215px, (max-width: 768px) 265px, (max-width: 1024px) 360px, 400px"
+                  className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.95] contrast-[1.03]"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
+                <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
 
                 {/* Badge de Vista Previa / Lightbox en esquina superior derecha */}
-                <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/70 backdrop-blur-md border border-white/20 group-hover:border-[#C8A97E] text-[#9A9A95] group-hover:text-[#F5F5F0] p-2 transition-all duration-500 rounded-none opacity-0 group-hover:opacity-100">
+                <div className="hidden sm:block absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/70 backdrop-blur-md border border-white/20 group-hover:border-[#C8A97E] text-[#9A9A95] group-hover:text-[#F5F5F0] p-2 transition-all duration-500 rounded-none opacity-0 group-hover:opacity-100">
                   <Eye className="w-4 h-4" />
                 </div>
 
-                {/* Pie de foto editorial */}
-                <div className="absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 flex flex-col justify-end">
+                {/* Pie de foto editorial (visible en sm+, limpio en móvil) */}
+                <div className="hidden sm:flex absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 flex-col justify-end">
                   <span className="text-[9px] uppercase tracking-[0.22em] text-[#9A9A95] group-hover:text-[#C8A97E] font-medium font-sans mb-1 transition-colors">
                     EXPANDIR FOTOGRAFÍA
                   </span>
