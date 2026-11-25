@@ -32,12 +32,12 @@ export function HeroVideo() {
       <img
         src={HERO_PHOTO_URL}
         alt="Gastronomía asiática nocturna — bowl de sopa de fideos (ramen) en ambiente íntimo"
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none scale-105 brightness-[0.85] contrast-[1.08]"
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none scale-105"
         aria-hidden="true"
       />
 
-      {/* Gradiente oscuro para hero nocturno: asegurar lectura y que botones resalten */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/70 pointer-events-none z-10" />
+      {/* Overlay de gradiente suave para legibilidad */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/65 pointer-events-none z-10" />
 
       {/* Grupo de botones en la zona inferior-media con desplazamiento hacia abajo */}
       <div
