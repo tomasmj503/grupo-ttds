@@ -3,14 +3,9 @@
 import React from "react";
 import { ChevronDown } from "lucide-react";
 
-// Fotografía gastronómica de ingredientes — estética limpia y clara/media (poster del video)
+// Fotografía gastronómica oscura/nocturna — bowl de sopa de fideos (ramen) en ambiente íntimo, alto impacto editorial
 const HERO_PHOTO_URL =
-  "https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1920&q=85";
-
-// TODO: reemplazar por URL de video gastronómico (Pexels) o /hero.mp4 local
-// Ejemplo Pexels: https://videos.pexels.com/video-files/xxxxxx/xxxxxx/xxxxxx.mp4
-const HERO_VIDEO_URL =
-  "https://videos.pexels.com/video-files/5727161/5727161-uhd_2560_1440_30fps.mp4";
+  "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1920&q=85";
 
 // URLs de menú directas (Canva)
 const TIO_TORO_MENU_URL =
@@ -33,20 +28,16 @@ export function HeroVideo() {
 
   return (
     <section className="relative h-[100svh] w-full overflow-hidden">
-      {/* Video de fondo gastronómico */}
-      <video
-        src={HERO_VIDEO_URL}
-        poster={HERO_PHOTO_URL}
-        autoPlay
-        loop
-        muted
-        playsInline
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+      {/* Fotografía oscura de fondo gastronómico (sin video) */}
+      <img
+        src={HERO_PHOTO_URL}
+        alt="Gastronomía asiática nocturna — bowl de sopa de fideos (ramen) en ambiente íntimo"
+        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none scale-105 brightness-[0.85] contrast-[1.08]"
         aria-hidden="true"
       />
 
-      {/* Gradiente sutil para asegurar lectura limpia sin tapar el video */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/65 pointer-events-none z-10" />
+      {/* Gradiente oscuro para hero nocturno: asegurar lectura y que botones resalten */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/70 pointer-events-none z-10" />
 
       {/* Grupo de botones en la zona inferior-media con desplazamiento hacia abajo */}
       <div

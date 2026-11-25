@@ -10,11 +10,16 @@ import { ReservationModal } from "@/components/ReservationModal";
 
 export default function HomePage() {
   const [isReservationOpen, setIsReservationOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#050505] text-[#F5F5F0] flex flex-col selection:bg-[#C8A97E] selection:text-[#050505]">
       {/* 1. Barra de Navegación Fija Editorial */}
-      <Navbar onOpenReservation={() => setIsReservationOpen(true)} />
+      <Navbar
+        onOpenReservation={() => setIsReservationOpen(true)}
+        isMobileMenuOpen={isMobileMenuOpen}
+        onMobileMenuChange={setIsMobileMenuOpen}
+      />
 
       {/* 2. Hero Video a Pantalla Completa con Logos a Menú Canva */}
       <main className="flex-1 flex flex-col">
@@ -34,7 +39,10 @@ export default function HomePage() {
       </main>
 
       {/* 4. Pie de Página Inteligente */}
-      <Footer onOpenReservation={() => setIsReservationOpen(true)} />
+      <Footer
+        onOpenReservation={() => setIsReservationOpen(true)}
+        onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+      />
 
       {/* 5. Modal de Reservaciones para Tío Toro & Dragon Soul */}
       <ReservationModal

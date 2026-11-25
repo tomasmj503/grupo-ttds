@@ -8,12 +8,27 @@ import { BRANDS, GROUP_INFO, getWhatsAppUrl } from "@/config/site";
 
 interface NavbarProps {
   onOpenReservation?: () => void;
+  isMobileMenuOpen?: boolean;
+  onMobileMenuChange?: (open: boolean) => void;
 }
 
-export function Navbar({ onOpenReservation }: NavbarProps) {
+export function Navbar({
+  onOpenReservation,
+  isMobileMenuOpen: controlledMobileMenuOpen,
+  onMobileMenuChange,
+}: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [internalMobileMenuOpen, setInternalMobileMenuOpen] = useState(false);
+
+  const isMobileMenuOpen = controlledMobileMenuOpen ?? internalMobileMenuOpen;
+  const setIsMobileMenuOpen = (open: boolean) => {
+    if (onMobileMenuChange) {
+      onMobileMenuChange(open);
+    } else {
+      setInternalMobileMenuOpen(open);
+    }
+  };
 
   const reservationDropdownRef = useRef<HTMLDivElement>(null);
 

@@ -11,15 +11,16 @@ export function SpecialEventsSection() {
   return (
     <section
       id="eventos-especiales"
-      className="w-full bg-[#232222] pt-4 sm:pt-6 pb-14 sm:pb-20 md:pb-24"
+      className="w-full bg-[#050505] py-12 sm:py-16 md:py-20"
       aria-labelledby="eventos-especiales-heading"
     >
-      <div className="relative w-full h-[400px] sm:h-[420px] md:h-[440px] lg:h-[460px] overflow-hidden bg-[#0C0C0C]">
+      <div className="relative w-full h-[380px] sm:h-[440px] lg:h-[500px] overflow-hidden">
         <Image
           src={SPECIAL_EVENTS.imageUrl}
           alt={SPECIAL_EVENTS.imageAlt}
           fill
           sizes="100vw"
+          priority
           className="object-cover object-center brightness-[0.9] contrast-[1.04]"
         />
 

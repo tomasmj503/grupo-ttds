@@ -203,7 +203,7 @@ export function MarqueeGallery() {
           Tío Toro · Dragon Soul
         </h2>
         <p className="text-xs sm:text-sm font-sans font-normal tracking-wide text-white/80">
-          Hamburguesas Artesanales · Sushi, Comida Asiática
+          Hamburguesas artesanales · Sushi y comida asiática
         </p>
       </div>
 

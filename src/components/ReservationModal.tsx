@@ -105,8 +105,8 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
                 <div className="flex items-center justify-between gap-4">
                   <div className="space-y-1">
                     <LogoTioToro className="h-6 sm:h-7 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
-                    <p className="text-[11px] text-[#9A9A95] tracking-[0.14em] uppercase font-sans mt-2">
-                      {BRANDS["tio-toro"].tagline}
+                    <p className="text-[11px] text-[#9A9A95] tracking-[0.14em] font-sans mt-2">
+                      Hamburguesas artesanales
                     </p>
                   </div>
                   <div className="w-10 h-10 border border-white/10 group-hover:border-[#C8A97E] group-hover:bg-[#C8A97E] text-[#9A9A95] group-hover:text-[#050505] flex items-center justify-center transition-all duration-500 shrink-0">
@@ -126,8 +126,8 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
                 <div className="flex items-center justify-between gap-4">
                   <div className="space-y-1">
                     <LogoDragonSoul className="h-6 sm:h-7 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
-                    <p className="text-[11px] text-[#9A9A95] tracking-[0.14em] uppercase font-sans mt-2">
-                      {BRANDS["dragon-soul"].tagline}
+                    <p className="text-[11px] text-[#9A9A95] tracking-[0.14em] font-sans mt-2">
+                      Sushi y comida asiática
                     </p>
                   </div>
                   <div className="w-10 h-10 border border-white/10 group-hover:border-[#C8A97E] group-hover:bg-[#C8A97E] text-[#9A9A95] group-hover:text-[#050505] flex items-center justify-center transition-all duration-500 shrink-0">
@@ -135,12 +135,6 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
                   </div>
                 </div>
               </a>
-            </div>
-
-            {/* Pie de modal */}
-            <div className="mt-8 pt-6 border-t border-white/5 flex items-center justify-center gap-2 text-[#9A9A95]/70 text-[10px] tracking-[0.2em] uppercase font-sans">
-              <MessageCircle className="w-3.5 h-3.5 text-[#C8A97E]" />
-              <span>WhatsApp Oficial +57 311 532 9393</span>
             </div>
           </motion.div>
         </div>

@@ -3,186 +3,136 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import {
-  BRANDS,
   GROUP_INFO,
   getWhatsAppUrl,
-  BrandKey,
 } from "@/config/site";
 import {
   LogoGrupoTTDS,
-  LogoTioToro,
-  LogoDragonSoul,
-  InstagramIcon,
+  ToroIcon,
+  DragonIcon,
 } from "./BrandLogos";
 
 interface FooterProps {
-  activeBrand?: BrandKey;
   onOpenReservation?: () => void;
+  onOpenMobileMenu?: () => void;
 }
 
-export function Footer({ activeBrand, onOpenReservation }: FooterProps) {
+export function Footer({
+  onOpenReservation,
+  onOpenMobileMenu,
+}: FooterProps) {
   const [currentYear, setCurrentYear] = useState(2026);
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
   }, []);
 
-  // Links para el Home (sin activeBrand)
-  const homeLinks = [
-    { label: "Tío Toro", href: "/tio-toro", isAction: false },
-    { label: "Dragon Soul", href: "/dragon-soul", isAction: false },
-    { label: "Reservas", href: "#reservas", isAction: true, onClick: onOpenReservation },
-    {
-      label: "Contáctanos",
-      href: getWhatsAppUrl(GROUP_INFO.whatsappNumber, GROUP_INFO.contactMessage),
-      isAction: false,
-      isExternal: true,
-    },
-    {
-      label: "PQRS",
-      href: getWhatsAppUrl(GROUP_INFO.whatsappNumber, GROUP_INFO.pqrsMessage),
-      isAction: false,
-      isExternal: true,
-    },
-  ];
+  const handleRestaurantsClick = () => {
+    if (typeof window !== "undefined" && window.innerWidth < 768 && onOpenMobileMenu) {
+      onOpenMobileMenu();
+      return;
+    }
 
-  // Links específicos para una marca individual (preparado para Fase 2)
-  const brand = activeBrand ? BRANDS[activeBrand] : null;
-  const brandLinks = brand
-    ? [
-        { label: "Menú", href: brand.menuUrl, isExternal: true },
-        { label: "Galería", href: "#galeria", isExternal: false },
-        { label: "Reservas", href: "#reservas", isAction: true, onClick: onOpenReservation },
-        { label: "Redes", href: brand.instagramUrl, isExternal: true },
-        { label: "Google Review", href: brand.googleReviewsUrl, isExternal: true },
-        {
-          label: "Contáctanos",
-          href: getWhatsAppUrl(GROUP_INFO.whatsappNumber, GROUP_INFO.contactMessage),
-          isExternal: true,
-        },
-        { label: "Cómo llegar", href: brand.googleMapsUrl, isExternal: true },
-        {
-          label: "PQRS",
-          href: getWhatsAppUrl(GROUP_INFO.whatsappNumber, GROUP_INFO.pqrsMessage),
-          isExternal: true,
-        },
-      ]
-    : [];
+    if (typeof window !== "undefined") {
+      if (window.location.pathname === "/") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        window.location.href = "/#";
+      }
+    }
+  };
 
-  const activeLinks = activeBrand ? brandLinks : homeLinks;
+  const contactUrl = getWhatsAppUrl(GROUP_INFO.whatsappNumber, GROUP_INFO.contactMessage);
+  const pqrsUrl = getWhatsAppUrl(GROUP_INFO.whatsappNumber, GROUP_INFO.pqrsMessage);
+
+  const linkClassName =
+    "text-xs sm:text-[13px] text-white hover:text-white/75 transition-colors duration-300 flex items-center justify-center cursor-pointer focus:outline-none";
 
   return (
-    <footer className="w-full bg-[#050505] border-t border-white/10 pt-16 sm:pt-24 pb-12 sm:pb-16 text-[#F5F5F0]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-8 text-center flex flex-col items-center">
-        {/* Enlaces de Navegación Centrados con Espaciado de Lujo */}
-        <nav
-          className="flex flex-wrap items-center justify-center gap-5 sm:gap-8 md:gap-12 mb-12 sm:mb-16"
-          aria-label="Enlaces de pie de página"
+    <footer
+      className="w-full bg-[#1E1D1C] pt-14 pb-12 sm:pb-16 text-[#F5F5F0]"
+      style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full flex flex-col items-center text-center">
+        {/* Logo Grupo TTDS - arriba del todo */}
+        <Link
+          href="/"
+          className="group focus:outline-none mb-11"
+          aria-label="Ir al inicio de Grupo TTDS"
         >
-          {activeLinks.map((link, idx) => {
-            if ("isAction" in link && link.isAction) {
-              return (
-                <button
-                  key={`${link.label}-${idx}`}
-                  type="button"
-                  onClick={link.onClick || onOpenReservation}
-                  className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#9A9A95] hover:text-[#C8A97E] transition-colors duration-500 cursor-pointer min-h-[44px] flex items-center"
-                >
-                  {link.label}
-                </button>
-              );
-            }
+          <LogoGrupoTTDS className="h-8 sm:h-10 w-auto text-white group-hover:text-white/75 transition-colors duration-300" />
+        </Link>
 
-            if ("isExternal" in link && link.isExternal) {
-              return (
-                <a
-                  key={`${link.label}-${idx}`}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#9A9A95] hover:text-[#C8A97E] transition-colors duration-500 min-h-[44px] flex items-center"
-                >
-                  {link.label}
-                </a>
-              );
-            }
+        {/* Pila vertical de enlaces centrados - muy juntos */}
+        <nav className="w-full flex flex-col items-center gap-1.5 mb-6" aria-label="Enlaces principales de pie de página">
+          {/* 1. Restaurantes */}
+          <button
+            type="button"
+            onClick={handleRestaurantsClick}
+            className={linkClassName}
+          >
+            Restaurantes
+          </button>
 
-            return (
-              <Link
-                key={`${link.label}-${idx}`}
-                href={link.href}
-                className="font-sans text-[11px] sm:text-xs uppercase tracking-[0.22em] text-[#9A9A95] hover:text-[#C8A97E] transition-colors duration-500 min-h-[44px] flex items-center"
-              >
-                {link.label}
-              </Link>
-            );
-          })}
+          {/* 2. Galería */}
+          <Link
+            href="/#galeria-editorial"
+            prefetch={false}
+            className={linkClassName}
+          >
+            Galería
+          </Link>
+
+          {/* 3. Reservas */}
+          <button
+            type="button"
+            onClick={onOpenReservation}
+            className={linkClassName}
+          >
+            Reservas
+          </button>
+
+          {/* 4. Contáctanos */}
+          <a
+            href={contactUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={linkClassName}
+          >
+            Contáctanos
+          </a>
+
+          {/* 5. PQRS */}
+          <a
+            href={pqrsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={linkClassName}
+          >
+            Pqrs
+          </a>
         </nav>
 
-        {/* Separador fino de revista */}
-        <div className="w-16 h-[1px] bg-white/10 mb-12 sm:mb-14" />
+        {/* Línea elegante debajo de PQRS */}
+        <div className="w-40 sm:w-56 h-[1px] bg-white/15 mx-auto mt-1.5 mb-4" aria-hidden="true" />
 
-        {/* Logo Grupo TTDS Centrado */}
-        <div className="mb-10 sm:mb-12">
-          <Link
-            href="/"
-            className="inline-block group focus:outline-none"
-            aria-label="Ir al inicio de Grupo TTDS"
-          >
-            <LogoGrupoTTDS className="h-9 sm:h-11 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-700" />
-          </Link>
-        </div>
-
-        {/* Fila alineada con los dos logos del mismo tamaño acompañados de su ícono de Instagram */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 sm:gap-16 pb-12 sm:pb-16 w-full max-w-2xl border-b border-white/5">
-          {/* Tío Toro + Instagram */}
-          <div className="flex items-center gap-4">
-            <Link
-              href="/tio-toro"
-              className="group focus:outline-none"
-              aria-label="Ir a la página de Tío Toro"
-            >
-              <LogoTioToro className="h-7 sm:h-8 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
-            </Link>
-            <a
-              href={BRANDS["tio-toro"].instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 border border-white/10 hover:border-[#C8A97E] text-[#9A9A95] hover:text-[#C8A97E] transition-all duration-500 rounded-none bg-white/[0.02]"
-              aria-label="Instagram oficial de Tío Toro"
-            >
-              <InstagramIcon className="w-4 h-4" />
-            </a>
+        {/* Bloques de iconos de marcas - compacto y simétrico */}
+        <div className="w-full flex items-center justify-center gap-4 mt-2.5" aria-hidden="true">
+          {/* Tío Toro - mitad izquierda */}
+          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-white/20 rounded-lg shrink-0">
+            <ToroIcon className="w-9 h-9 sm:w-10 sm:h-10 text-white/80" />
           </div>
 
-          <div className="hidden sm:block w-[1px] h-6 bg-white/10" />
-
-          {/* Dragon Soul + Instagram */}
-          <div className="flex items-center gap-4">
-            <Link
-              href="/dragon-soul"
-              className="group focus:outline-none"
-              aria-label="Ir a la página de Dragon Soul"
-            >
-              <LogoDragonSoul className="h-7 sm:h-8 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
-            </Link>
-            <a
-              href={BRANDS["dragon-soul"].instagramUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 border border-white/10 hover:border-[#C8A97E] text-[#9A9A95] hover:text-[#C8A97E] transition-all duration-500 rounded-none bg-white/[0.02]"
-              aria-label="Instagram oficial de Dragon Soul"
-            >
-              <InstagramIcon className="w-4 h-4" />
-            </a>
+          {/* Dragon Soul - mitad derecha */}
+          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-white/20 rounded-lg shrink-0">
+            <DragonIcon className="w-9 h-9 sm:w-10 sm:h-10 text-white/80" />
           </div>
         </div>
 
-        {/* Barra Legal y Créditos Inferiores */}
-        <div className="pt-8 w-full flex flex-col sm:flex-row items-center justify-between text-[10px] text-[#9A9A95]/60 tracking-[0.2em] uppercase font-sans gap-3">
-          <p>© {currentYear} {GROUP_INFO.name}. TODOS LOS DERECHOS RESERVADOS.</p>
-          <p>NORMANDÍA · BOGOTÁ, COLOMBIA</p>
-        </div>
+        {/* Cierre inferior: solo copyright */}
+        <p className="text-[9px] sm:text-[10px] text-white/70 mt-6">
+          © {currentYear} Grupo TTDS. Todos los derechos reservados · Bogotá, Colombia
+        </p>
       </div>
     </footer>
   );

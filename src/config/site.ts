@@ -46,6 +46,8 @@ export interface GroupInfo {
   whatsappNumber: string;
   contactMessage: string;
   pqrsMessage: string;
+  termsUrl: string;
+  privacyUrl: string;
 }
 
 export interface SpecialEventsConfig {
@@ -63,6 +65,8 @@ export const GROUP_INFO: GroupInfo = {
   whatsappNumber: "573115329393",
   contactMessage: "Hola Grupo TTDS, quisiera solicitar información.",
   pqrsMessage: "Hola Grupo TTDS, deseo radicar una PQRS.",
+  termsUrl: "#terminos-y-condiciones",
+  privacyUrl: "#politica-de-privacidad",
 };
 
 export const SPECIAL_EVENTS: SpecialEventsConfig = {
@@ -158,10 +162,10 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
   {
     id: "mg-0",
     imageUrl:
-      "https://images.unsplash.com/photo-1586190848861-99aa4a171e90?auto=format&fit=crop&w=1000&q=85",
-    alt: "Hamburguesa Gourmet a la Brasa - Tío Toro",
+      "https://images.unsplash.com/photo-1553979459-d2229ba7433b?auto=format&fit=crop&w=1000&q=85",
+    alt: "Hamburguesa Artesanal a la Brasa - Tío Toro",
     hasInstagram: false,
-    caption: "Cortes seleccionados a la brasa con queso fundido y pan brioche artesanal.",
+    caption: "Hamburguesa de autor con carne madurada, queso artesanal y pan brioche tostado.",
     brandId: "tio-toro",
   },
   {

@@ -15,7 +15,7 @@ export function LogoGrupoTTDS({
 }: LogoProps) {
   return (
     <span
-      className={`inline-flex flex-col items-start leading-none select-none ${className}`}
+      className={`inline-flex flex-col items-center leading-none select-none ${className}`}
       aria-label="Grupo TTDS"
     >
       {/* TTDS — tipografía editorial Cormorant */}
@@ -197,6 +197,140 @@ export function InstagramIcon({ className = "w-4 h-4" }: { className?: string })
       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
       <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
       <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
+/**
+ * Ícono cuadrado provisional de torito simple (Tío Toro)
+ * Para uso en el footer bajo el logo GRUPO TTDS
+ */
+export function ToroIcon({ className = "w-14 h-14" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-label="Tío Toro"
+      role="img"
+    >
+      {/* Cuerno izquierdo */}
+      <path
+        d="M16 36 C14 28 18 22 22 20 C24 19 26 21 24 26"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      {/* Cuerno derecho */}
+      <path
+        d="M48 36 C50 28 46 22 42 20 C40 19 38 21 40 26"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      {/* Cara del toro - óvalo */}
+      <ellipse
+        cx="32"
+        cy="38"
+        rx="16"
+        ry="12"
+        stroke="currentColor"
+        strokeWidth="2"
+        fill="none"
+      />
+      {/* Hocico */}
+      <ellipse
+        cx="32"
+        cy="44"
+        rx="6"
+        ry="4"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        fill="none"
+      />
+      {/* Nariz - dos puntos */}
+      <circle cx="30" cy="44" r="1" fill="currentColor" />
+      <circle cx="34" cy="44" r="1" fill="currentColor" />
+      {/* Ojos */}
+      <circle cx="26" cy="36" r="1.5" fill="currentColor" />
+    </svg>
+  );
+}
+
+/**
+ * Ícono cuadrado provisional de dragoncito simple (Dragon Soul)
+ * Para uso en el footer bajo el logo GRUPO TTDS
+ */
+export function DragonIcon({ className = "w-14 h-14" }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className={className}
+      aria-label="Dragon Soul"
+      role="img"
+    >
+      {/* Cuerpo del dragón en forma de S / ensō */}
+      <path
+        d="M46 18 C46 18 40 12 32 12 C24 12 20 18 20 26 C20 34 26 40 32 40 C38 40 44 34 44 28 C44 22 40 18 40 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      {/* Cola */}
+      <path
+        d="M20 26 C16 24 14 28 12 32"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Cabeza del dragón */}
+      <path
+        d="M46 18 C50 16 52 18 50 22 C49 24 46 22 46 18"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+      {/* Ojo */}
+      <circle cx="47" cy="19" r="1.5" fill="currentColor" />
+      {/* Cuerno/cresta */}
+      <path
+        d="M44 16 C43 12 46 10 48 12"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+      {/* Perla/esfera mística */}
+      <circle cx="32" cy="48" r="3" fill="currentColor" opacity="0.8" />
+      {/* Detalle escamas ligeras */}
+      <path
+        d="M28 30 C30 28 34 28 36 30"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.5"
+      />
+      <path
+        d="M28 36 C30 34 34 34 36 36"
+        stroke="currentColor"
+        strokeWidth="1"
+        strokeLinecap="round"
+        fill="none"
+        opacity="0.5"
+      />
     </svg>
   );
 }
