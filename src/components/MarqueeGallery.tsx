@@ -194,7 +194,7 @@ export function MarqueeGallery() {
   return (
     <section
       id="galeria-editorial"
-      className="relative w-full bg-[#232222] py-12 sm:py-20 md:py-24 overflow-hidden border-t border-b border-white/10"
+      className="relative w-full bg-[#232222] py-12 sm:py-20 md:py-24 overflow-hidden border-t border-white/10"
       aria-label="Galería fotográfica nocturna"
     >
       {/* Cabecera Editorial */}

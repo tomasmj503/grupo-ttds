@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroVideo } from "@/components/HeroVideo";
 import { MarqueeGallery } from "@/components/MarqueeGallery";
+import { SpecialEventsSection } from "@/components/SpecialEventsSection";
 import { Footer } from "@/components/Footer";
 import { ReservationModal } from "@/components/ReservationModal";
 
@@ -27,6 +28,9 @@ export default function HomePage() {
 
         {/* 5. Ancla de navegación: Dragon Soul */}
         <div id="dragon-soul" />
+
+        {/* 6. Bloque de Eventos Especiales */}
+        <SpecialEventsSection />
       </main>
 
       {/* 4. Pie de Página Inteligente */}

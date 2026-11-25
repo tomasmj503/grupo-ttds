@@ -48,11 +48,34 @@ export interface GroupInfo {
   pqrsMessage: string;
 }
 
+export interface SpecialEventsConfig {
+  eyebrow: string;
+  title: string;
+  description: string;
+  ctaLabel: string;
+  imageUrl: string;
+  imageAlt: string;
+  whatsappMessage: string;
+}
+
 export const GROUP_INFO: GroupInfo = {
   name: "GRUPO TTDS",
   whatsappNumber: "573115329393",
   contactMessage: "Hola Grupo TTDS, quisiera solicitar información.",
   pqrsMessage: "Hola Grupo TTDS, deseo radicar una PQRS.",
+};
+
+export const SPECIAL_EVENTS: SpecialEventsConfig = {
+  eyebrow: "Eventos Privados · Grupos",
+  title: "Eventos Especiales",
+  description:
+    "Celebraciones privadas, cenas corporativas y noches a la medida en Tío Toro y Dragon Soul.",
+  ctaLabel: "Cotizar evento",
+  imageUrl:
+    "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=85",
+  imageAlt: "Salón y ambiente nocturno para eventos especiales en Grupo TTDS",
+  whatsappMessage:
+    "Hola Grupo TTDS, quisiera cotizar y consultar disponibilidad para un evento especial en Tío Toro / Dragon Soul.",
 };
 
 export const BRANDS: Record<BrandKey, BrandConfig> = {
