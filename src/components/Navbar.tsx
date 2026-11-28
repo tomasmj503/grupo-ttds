@@ -110,9 +110,11 @@ export function Navbar({
     };
   }, [isReservationOpen]);
 
-  // Cierre del menú de un restaurante al hacer clic fuera o pulsar Escape
+  // Cierre del menú de un restaurante (solo el panel de escritorio) al hacer clic fuera o pulsar Escape.
+  // Con el menú móvil abierto no se aplica: el acordeón se cierra con su flecha, y recogerlo al tocar
+  // otro botón (p. ej. Reservaciones) movería el contenido antes de soltar el dedo y se perdería el toque.
   useEffect(() => {
-    if (!openBrand) return;
+    if (!openBrand || isMobileMenuOpen) return;
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       // No cerrar si el clic está dentro de un disparador o de un panel de restaurante
@@ -137,7 +139,7 @@ export function Navbar({
       document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [openBrand]);
+  }, [openBrand, isMobileMenuOpen]);
 
   // Manejo de tecla Escape y bloqueo de scroll cuando el menú móvil está abierto
   useEffect(() => {
