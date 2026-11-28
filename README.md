@@ -1,36 +1,48 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GRUPO TTDS
 
-## Getting Started
+Sitio web de **Grupo TTDS**, que reúne a dos restaurantes en Normandía, Bogotá:
 
-First, run the development server:
+- **Tío Toro** — hamburguesas artesanales.
+- **Dragon Soul** — sushi y comida asiática.
+
+El diseño toma como referencia el estilo editorial y nocturno de [Tao Group](https://taogroup.com): fondo negro, mucha fotografía y casi ningún texto sobre las imágenes.
+
+## Qué tiene
+
+- **Home** (`/`): hero con los logos que abren cada menú (Canva), carrusel de fotos que se mueve solo, sección de eventos privados y footer.
+- **Galerías**: `/tio-toro/galeria`, `/dragon-soul/galeria` y `/galeria` (las dos mezcladas). La de Tío Toro y la mezclada incluyen un video.
+- **Menú desplegable** de cada restaurante: Menú, Galería, Reserva (WhatsApp), Redes sociales, Historia y Ubicación (Google Maps, Waze y reseñas).
+- **Reservas** por WhatsApp con el mensaje ya escrito para cada restaurante.
+
+## Tecnología
+
+Next.js 16 (App Router) · React 19 · Tailwind CSS 4 · TypeScript · Framer Motion · Lucide.
+
+> Esta versión de Next.js tiene cambios respecto a lo que suele conocerse. Antes de programar, consultar la documentación incluida en `node_modules/next/dist/docs/` (ver `AGENTS.md`).
+
+## Cómo correrlo
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Otros comandos:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run lint     # revisión de código
+npm run build    # compilación de producción (la misma que hace el despliegue)
+npm run start    # sirve la compilación de producción
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Antes de subir cambios conviene correr `npx tsc --noEmit`, `npm run lint` y `npm run build`: los tres deben terminar sin errores.
 
-## Learn More
+## Despliegue
 
-To learn more about Next.js, take a look at the following resources:
+El repositorio está conectado a **Vercel** a través de GitHub. Cada `git push` a `main` despliega el sitio automáticamente; no hace falta hacer nada más.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Dónde cambiar las cosas
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Casi todo el contenido (textos, enlaces, redes, fotos, orden de las galerías, video, número de WhatsApp) está en un solo archivo: [`src/config/site.ts`](src/config/site.ts).
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+La guía completa de cómo está hecho el sitio y de cómo cambiar cada cosa está en [`ARCHITECTURE.md`](ARCHITECTURE.md).
