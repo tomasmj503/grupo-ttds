@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Link from "next/link";
 import {
   GROUP_INFO,
@@ -21,11 +21,7 @@ export function Footer({
   onOpenReservation,
   onOpenMobileMenu,
 }: FooterProps) {
-  const [currentYear, setCurrentYear] = useState(2026);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
+  const currentYear = new Date().getFullYear();
 
   const handleRestaurantsClick = () => {
     if (typeof window !== "undefined" && window.innerWidth < 768 && onOpenMobileMenu) {

@@ -156,6 +156,18 @@ export function MarqueeGallery() {
     touchStateRef.current.isDragging = false;
   };
 
+  const handlePrev = useCallback(() => {
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev - 1 + HOME_MARQUEE_GALLERY.length) % HOME_MARQUEE_GALLERY.length
+    );
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setLightboxIndex((prev) =>
+      prev === null ? null : (prev + 1) % HOME_MARQUEE_GALLERY.length
+    );
+  }, []);
+
   // Manejo de teclado para el visor Lightbox
   useEffect(() => {
     if (lightboxIndex === null) return;
@@ -174,19 +186,7 @@ export function MarqueeGallery() {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = originalOverflow;
     };
-  }, [lightboxIndex]);
-
-  const handlePrev = () => {
-    setLightboxIndex((prev) =>
-      prev === null ? null : (prev - 1 + HOME_MARQUEE_GALLERY.length) % HOME_MARQUEE_GALLERY.length
-    );
-  };
-
-  const handleNext = () => {
-    setLightboxIndex((prev) =>
-      prev === null ? null : (prev + 1) % HOME_MARQUEE_GALLERY.length
-    );
-  };
+  }, [lightboxIndex, handlePrev, handleNext]);
 
   const currentLightboxItem: MarqueeGalleryItem | null =
     lightboxIndex !== null ? HOME_MARQUEE_GALLERY[lightboxIndex] : null;

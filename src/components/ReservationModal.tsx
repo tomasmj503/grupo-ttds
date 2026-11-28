@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, MessageCircle } from "lucide-react";
+import { X, ArrowRight } from "lucide-react";
 import { BRANDS, GROUP_INFO, getWhatsAppUrl } from "@/config/site";
 import { LogoTioToro, LogoDragonSoul } from "./BrandLogos";
 
