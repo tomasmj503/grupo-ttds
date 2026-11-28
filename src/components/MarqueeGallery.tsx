@@ -2,9 +2,10 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
-import { X, ChevronLeft, ChevronRight, Eye, Pause, Play } from "lucide-react";
-import { HOME_MARQUEE_GALLERY, MarqueeGalleryItem } from "@/config/site";
+import { ChevronLeft, ChevronRight, Eye, Pause, Play } from "lucide-react";
+import { HOME_MARQUEE_GALLERY } from "@/config/site";
 import { InstagramIcon } from "./BrandLogos";
+import { PhotoLightbox } from "./PhotoLightbox";
 
 export function MarqueeGallery() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -156,40 +157,45 @@ export function MarqueeGallery() {
     touchStateRef.current.isDragging = false;
   };
 
-  const handlePrev = useCallback(() => {
-    setLightboxIndex((prev) =>
-      prev === null ? null : (prev - 1 + HOME_MARQUEE_GALLERY.length) % HOME_MARQUEE_GALLERY.length
-    );
-  }, []);
+  // Arrastre con el mouse en escritorio (equivalente al swipe táctil)
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (e.button !== 0) return;
 
-  const handleNext = useCallback(() => {
-    setLightboxIndex((prev) =>
-      prev === null ? null : (prev + 1) % HOME_MARQUEE_GALLERY.length
-    );
-  }, []);
-
-  // Manejo de teclado para el visor Lightbox
-  useEffect(() => {
-    if (lightboxIndex === null) return;
-
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setLightboxIndex(null);
-      if (e.key === "ArrowLeft") handlePrev();
-      if (e.key === "ArrowRight") handleNext();
+    if (trackRef.current) {
+      trackRef.current.style.transition = "";
+    }
+    touchStateRef.current = {
+      startX: e.clientX,
+      startY: e.clientY,
+      lastX: e.clientX,
+      isDragging: true,
+      hasMoved: false,
     };
 
-    document.addEventListener("keydown", handleKeyDown);
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const handleMouseMove = (event: MouseEvent) => {
+      const state = touchStateRef.current;
+      if (!state.isDragging) return;
+      // Pequeño umbral para no confundir un clic con un arrastre
+      if (!state.hasMoved && Math.abs(event.clientX - state.startX) < 4) return;
 
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-      document.body.style.overflow = originalOverflow;
+      state.hasMoved = true;
+      const deltaX = event.clientX - state.lastX;
+      state.lastX = event.clientX;
+      positionRef.current = wrapPosition(positionRef.current + deltaX);
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translate3d(${positionRef.current}px, 0, 0)`;
+      }
     };
-  }, [lightboxIndex, handlePrev, handleNext]);
 
-  const currentLightboxItem: MarqueeGalleryItem | null =
-    lightboxIndex !== null ? HOME_MARQUEE_GALLERY[lightboxIndex] : null;
+    const handleMouseUp = () => {
+      touchStateRef.current.isDragging = false;
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+  };
 
   return (
     <section
@@ -241,9 +247,11 @@ export function MarqueeGallery() {
 
       {/* Contenedor de la Cinta Horizontal Marquee */}
       <div
-        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y"
+        className="relative w-full overflow-hidden cursor-grab active:cursor-grabbing touch-pan-y select-none"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
+        onMouseDown={handleMouseDown}
+        onDragStart={(e) => e.preventDefault()}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -281,22 +289,9 @@ export function MarqueeGallery() {
                     sizes="(max-width: 640px) 220px, (max-width: 768px) 300px, 384px"
                     className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.95] contrast-[1.03]"
                   />
-                  <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-70 group-hover:opacity-90 transition-opacity duration-500" />
 
-                  {/* Badge de Instagram en la esquina superior derecha */}
-                  <div className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/50 sm:bg-black/70 backdrop-blur-md sm:border sm:border-white/20 group-hover:border-[#C8A97E] text-white group-hover:text-[#C8A97E] p-1.5 sm:p-2 transition-all duration-500 rounded-full sm:rounded-none shadow-md">
-                    <InstagramIcon className="w-4 h-4" />
-                  </div>
-
-                  {/* Pie de foto editorial (visible en sm+, limpio en móvil) */}
-                  <div className="hidden sm:flex absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 flex-col justify-end">
-                    <span className="text-[9px] uppercase tracking-[0.22em] text-[#C8A97E] font-medium font-sans mb-1 flex items-center gap-1.5">
-                      <InstagramIcon className="w-3 h-3" /> VER EN INSTAGRAM
-                    </span>
-                    <p className="text-xs text-[#F5F5F0] font-serif line-clamp-2">
-                      {item.caption}
-                    </p>
-                  </div>
+                  {/* Ícono de Instagram solo, en blanco, sobre la foto */}
+                  <InstagramIcon className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 w-6 h-6 text-white drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]" />
                 </a>
               );
             }
@@ -320,98 +315,21 @@ export function MarqueeGallery() {
                   sizes="(max-width: 640px) 220px, (max-width: 768px) 300px, 384px"
                   className="object-cover scale-100 group-hover:scale-[1.04] transition-transform duration-700 ease-out filter brightness-[0.95] contrast-[1.03]"
                 />
-                <div className="hidden sm:block absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-85 transition-opacity duration-500" />
 
-                {/* Badge de Vista Previa / Lightbox en esquina superior derecha */}
-                <div className="hidden sm:block absolute top-3 right-3 sm:top-4 sm:right-4 z-10 bg-black/70 backdrop-blur-md border border-white/20 group-hover:border-[#C8A97E] text-[#9A9A95] group-hover:text-[#F5F5F0] p-2 transition-all duration-500 rounded-none opacity-0 group-hover:opacity-100">
-                  <Eye className="w-4 h-4" />
-                </div>
-
-                {/* Pie de foto editorial (visible en sm+, limpio en móvil) */}
-                <div className="hidden sm:flex absolute bottom-0 inset-x-0 p-4 sm:p-5 z-10 flex-col justify-end">
-                  <span className="text-[9px] uppercase tracking-[0.22em] text-[#9A9A95] group-hover:text-[#C8A97E] font-medium font-sans mb-1 transition-colors">
-                    EXPANDIR FOTOGRAFÍA
-                  </span>
-                  <p className="text-xs text-[#F5F5F0] font-serif line-clamp-2">
-                    {item.caption}
-                  </p>
-                </div>
+                {/* Ícono de ampliar, solo en blanco, al pasar el cursor */}
+                <Eye className="hidden sm:block absolute top-4 right-4 z-10 w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 drop-shadow-[0_1px_4px_rgba(0,0,0,0.7)]" />
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Visor Lightbox Oscuro a Pantalla Completa */}
-      {lightboxIndex !== null && currentLightboxItem && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Visor de fotografía en pantalla completa"
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-xl flex flex-col justify-between p-4 sm:p-8 animate-in fade-in duration-300 select-none"
-        >
-          {/* Barra Superior del Lightbox */}
-          <div className="w-full max-w-7xl mx-auto flex items-center justify-between z-20">
-            <div className="text-[11px] font-sans uppercase tracking-[0.25em] text-[#9A9A95]">
-              <span className="text-[#C8A97E] font-medium">
-                {String(lightboxIndex + 1).padStart(2, "0")}
-              </span>{" "}
-              / {String(HOME_MARQUEE_GALLERY.length).padStart(2, "0")}
-            </div>
-
-            <button
-              onClick={() => setLightboxIndex(null)}
-              className="p-2 sm:p-3 text-[#9A9A95] hover:text-[#F5F5F0] border border-white/10 hover:border-[#C8A97E] transition-all duration-300 rounded-none"
-              aria-label="Cerrar visor de fotografía"
-            >
-              <X className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Área Principal de la Imagen */}
-          <div className="relative flex-1 flex items-center justify-center my-4 w-full max-w-6xl mx-auto px-4 sm:px-12">
-            {/* Flecha Anterior */}
-            <button
-              onClick={handlePrev}
-              className="absolute left-2 sm:left-4 z-20 p-3 sm:p-4 bg-black/60 backdrop-blur-md border border-white/10 hover:border-[#C8A97E] text-[#9A9A95] hover:text-[#F5F5F0] transition-all duration-300 rounded-none cursor-pointer"
-              aria-label="Fotografía anterior"
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </button>
-
-            {/* Imagen Principal */}
-            <div className="relative w-full h-[60vh] sm:h-[72vh] flex items-center justify-center">
-              <Image
-                src={currentLightboxItem.imageUrl}
-                alt={currentLightboxItem.alt}
-                fill
-                priority
-                sizes="(max-width: 1200px) 90vw, 1200px"
-                className="object-contain filter contrast-[1.05]"
-              />
-            </div>
-
-            {/* Flecha Siguiente */}
-            <button
-              onClick={handleNext}
-              className="absolute right-2 sm:right-4 z-20 p-3 sm:p-4 bg-black/60 backdrop-blur-md border border-white/10 hover:border-[#C8A97E] text-[#9A9A95] hover:text-[#F5F5F0] transition-all duration-300 rounded-none cursor-pointer"
-              aria-label="Fotografía siguiente"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </button>
-          </div>
-
-          {/* Barra Inferior con Título y Leyenda Editorial */}
-          <div className="w-full max-w-3xl mx-auto text-center z-20 pb-2">
-            <p className="font-serif text-lg sm:text-2xl text-[#F5F5F0] font-normal leading-relaxed">
-              {currentLightboxItem.caption}
-            </p>
-            <span className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.26em] text-[#C8A97E] block mt-2">
-              GRUPO TTDS · COLECCIÓN EXCLUSIVA
-            </span>
-          </div>
-        </div>
-      )}
+      {/* Visor a pantalla completa (compartido con las galerías) */}
+      <PhotoLightbox
+        photos={HOME_MARQUEE_GALLERY}
+        index={lightboxIndex}
+        onIndexChange={setLightboxIndex}
+      />
     </section>
   );
 }
