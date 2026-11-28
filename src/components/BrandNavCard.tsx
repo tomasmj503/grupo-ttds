@@ -3,13 +3,13 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { X } from "lucide-react";
+import { MapPin, Star, X } from "lucide-react";
 import {
   getBrandNavCardAction,
   type BrandConfig,
   type BrandNavCard as BrandNavCardData,
 } from "@/config/site";
-import { InstagramIcon, TikTokIcon, FacebookIcon } from "./BrandLogos";
+import { InstagramIcon, TikTokIcon, FacebookIcon, WazeIcon } from "./BrandLogos";
 
 export type BrandNavCardVariant = "desktop" | "mobile";
 
@@ -42,12 +42,16 @@ function CardFace({
         alt={`${card.title} ${brand.name}`}
         fill
         sizes={variant === "desktop" ? "420px" : "(max-width: 768px) 100vw, 420px"}
+        style={{
+          objectPosition:
+            (variant === "mobile" && card.imagePositionMobile) || card.imagePosition || "center",
+        }}
         className="object-cover group-hover:scale-105 transition-transform duration-500"
       />
 
       {variant === "desktop" ? (
         <>
-          <div className="absolute inset-0 bg-black/55 group-hover:bg-black/40 transition-colors duration-300" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent group-hover:opacity-75 transition-opacity duration-300" />
           <div className="relative z-10 flex flex-col justify-end h-full p-4">
             <h3 className="text-white font-semibold text-sm tracking-wide">{card.title}</h3>
             <p className="text-white/70 text-xs mt-0.5 leading-tight">{copy.subtitle}</p>
@@ -99,6 +103,47 @@ function SocialOverlay({ brand, onClose }: { brand: BrandConfig; onClose: () => 
 
       <div className="flex items-start justify-center gap-5">
         {networks.map(({ label, href, Icon }) => (
+          <a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${label} de ${brand.name}`}
+            className="flex flex-col items-center gap-2 text-white/80 hover:text-white transition-colors"
+          >
+            <span className={SOCIAL_LINK_CLASSES}>
+              <Icon className="w-5 h-5" />
+            </span>
+            <span className="text-[11px] font-medium">{label}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function LocationOverlay({ brand, onClose }: { brand: BrandConfig; onClose: () => void }) {
+  const options = [
+    { label: "Google Maps", href: brand.googleMapsUrl, Icon: MapPin },
+    { label: "Waze", href: brand.wazeUrl, Icon: WazeIcon },
+    { label: "Reseñas", href: brand.googleReviewsUrl, Icon: Star },
+  ];
+
+  return (
+    <div className="absolute inset-0 z-30 bg-neutral-950/95 backdrop-blur-md flex flex-col items-center justify-center gap-5 p-5 text-center cursor-default">
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute top-3 right-3 p-2 text-white/70 hover:text-white transition-colors cursor-pointer focus:outline-none"
+        aria-label="Cerrar ubicación"
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      <p className="text-white font-semibold text-sm tracking-wide">Cómo llegar</p>
+
+      <div className="flex items-start justify-center gap-5">
+        {options.map(({ label, href, Icon }) => (
           <a
             key={label}
             href={href}
@@ -182,6 +227,8 @@ export function BrandNavCard({ brand, card, variant, onNavigate }: BrandNavCardP
       {overlayOpen &&
         (action.overlay === "social" ? (
           <SocialOverlay brand={brand} onClose={closeOverlay} />
+        ) : action.overlay === "location" ? (
+          <LocationOverlay brand={brand} onClose={closeOverlay} />
         ) : (
           <HistoryOverlay brand={brand} onClose={closeOverlay} />
         ))}

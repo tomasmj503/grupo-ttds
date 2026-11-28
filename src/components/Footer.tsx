@@ -3,14 +3,13 @@
 import React from "react";
 import Link from "next/link";
 import {
+  BRANDS,
   GROUP_INFO,
   getWhatsAppUrl,
 } from "@/config/site";
-import {
-  LogoGrupoTTDS,
-  ToroIcon,
-  DragonIcon,
-} from "./BrandLogos";
+import { LogoGrupoTTDS } from "./BrandLogos";
+import { BrandWordmark } from "./BrandWordmark";
+import { HomeLink } from "./HomeLink";
 
 interface FooterProps {
   onOpenReservation?: () => void;
@@ -51,13 +50,12 @@ export function Footer({
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full flex flex-col items-center text-center">
         {/* Logo Grupo TTDS - arriba del todo */}
-        <Link
-          href="/"
+        <HomeLink
           className="group focus:outline-none mb-11"
-          aria-label="Ir al inicio de Grupo TTDS"
+          ariaLabel="Ir al inicio de Grupo TTDS"
         >
           <LogoGrupoTTDS className="h-8 sm:h-10 w-auto text-white group-hover:text-white/75 transition-colors duration-300" />
-        </Link>
+        </HomeLink>
 
         {/* Pila vertical de enlaces centrados - muy juntos */}
         <nav className="w-full flex flex-col items-center gap-1.5 mb-6" aria-label="Enlaces principales de pie de página">
@@ -72,8 +70,7 @@ export function Footer({
 
           {/* 2. Galería */}
           <Link
-            href="/#galeria-editorial"
-            prefetch={false}
+            href="/galeria"
             className={linkClassName}
           >
             Galería
@@ -112,17 +109,20 @@ export function Footer({
         {/* Línea elegante debajo de PQRS */}
         <div className="w-40 sm:w-56 h-[1px] bg-white/15 mx-auto mt-1.5 mb-4" aria-hidden="true" />
 
-        {/* Bloques de iconos de marcas - compacto y simétrico */}
-        <div className="w-full flex items-center justify-center gap-4 mt-2.5" aria-hidden="true">
-          {/* Tío Toro - mitad izquierda */}
-          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-white/20 rounded-lg shrink-0">
-            <ToroIcon className="w-9 h-9 sm:w-10 sm:h-10 text-white/80" />
-          </div>
-
-          {/* Dragon Soul - mitad derecha */}
-          <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center border border-white/20 rounded-lg shrink-0">
-            <DragonIcon className="w-9 h-9 sm:w-10 sm:h-10 text-white/80" />
-          </div>
+        {/* Logos de los restaurantes - mismo ancho, centrados */}
+        <div className="w-full flex items-center justify-center gap-8 sm:gap-12 mt-5">
+          {(["tio-toro", "dragon-soul"] as const).map((brandId) => (
+            <a
+              key={brandId}
+              href={BRANDS[brandId].instagramUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`Instagram de ${BRANDS[brandId].name}`}
+              className="transition-opacity duration-300 hover:opacity-75 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 rounded"
+            >
+              <BrandWordmark brandId={brandId} size="footer" />
+            </a>
+          ))}
         </div>
 
         {/* Cierre inferior: solo copyright */}

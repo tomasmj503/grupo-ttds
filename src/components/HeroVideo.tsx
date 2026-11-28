@@ -2,21 +2,19 @@
 
 import React from "react";
 import { ChevronDown } from "lucide-react";
+import { BRANDS } from "@/config/site";
+import { BrandWordmark } from "./BrandWordmark";
 
 // Fotografía gastronómica oscura/nocturna — bowl de sopa de fideos (ramen) en ambiente íntimo, alto impacto editorial
 const HERO_PHOTO_URL =
   "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1920&q=85";
 
-// URLs de menú directas (Canva)
-const TIO_TORO_MENU_URL =
-  "https://www.canva.com/design/DAETKN_Z2zg/oi4-ki_Y7c_P4qmPUksl0A/view?utm_content=DAETKN_Z2zg&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h39e98f401b&fbclid=PAZXh0bgNhZW0CMTEAcGRvZgJzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAacD-lzfRFENzMmoAohQP5LOdg_H5l67Qc9rsKZCPWbbmwPiH5KZit7cBGuHPw_aem_93hiedP5fJYER0EejDywgQ";
-
-const DRAGON_SOUL_MENU_URL =
-  "https://www.canva.com/design/DAGsIjI-nY8/zWSS-138yvWEIDUidsKRUA/view?utm_content=DAGsIjI-nY8&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hd1c7feb66a&fbclid=PAZXh0bgNhZW0CMTEAcGRvZgJzcnRjBmFwcF9pZA85MzY2MTk3NDMzOTI0NTkAAadkFF_LpUVn-YjQOULuVMKs95wLcxiOK76Lja2KSwtfm2qaEVyQmI5C7yNnFA_aem_Hc-2gVpgTkpaz-S6PcGG-A#2";
-
-// Clases compartidas
+// Botón de vidrio con el logo del restaurante y la etiqueta "Ver menú"
 const BUTTON_CLASSES =
-  "relative z-30 pointer-events-auto min-w-[152px] sm:min-w-[180px] px-6 sm:px-8 py-3 sm:py-3.5 rounded-full bg-black/45 hover:bg-white text-white hover:text-[#0A0A0A] border border-white/80 backdrop-blur-sm text-xs sm:text-sm font-medium tracking-wide transition-all duration-300 whitespace-nowrap text-center cursor-pointer";
+  "group relative z-30 pointer-events-auto w-[clamp(130px,42vw,152px)] h-[112px] sm:w-[240px] sm:h-[152px] shrink-0 justify-center rounded-2xl bg-black/45 hover:bg-black/60 border border-white/70 hover:border-white backdrop-blur-sm transition-all duration-300 flex flex-col items-center gap-2 cursor-pointer";
+
+const BUTTON_LABEL_CLASSES =
+  "text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.22em] text-white/80 group-hover:text-white transition-colors";
 
 export function HeroVideo() {
   const scrollToGallery = () => {
@@ -39,29 +37,25 @@ export function HeroVideo() {
       {/* Overlay de gradiente suave para legibilidad */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/65 pointer-events-none z-10" />
 
-      {/* Grupo de botones en la zona inferior-media con desplazamiento hacia abajo */}
+      {/* Logos de los menús al borde inferior, lado a lado: dejan libre el centro para el video */}
       <div
-        className="absolute inset-x-0 z-30 pointer-events-auto flex flex-row items-center justify-center gap-3 sm:gap-4 px-5"
-        style={{ top: "calc(50% + 50px)", transform: "translateY(-50%)" }}
+        className="absolute inset-x-0 bottom-[124px] sm:bottom-[140px] z-30 pointer-events-auto flex flex-row items-center justify-center gap-3 sm:gap-4 px-5"
       >
-        <a
-          href={TIO_TORO_MENU_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={BUTTON_CLASSES}
-          aria-label="Abrir Menú de Tío Toro"
-        >
-          Menú Tío Toro
-        </a>
-        <a
-          href={DRAGON_SOUL_MENU_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={BUTTON_CLASSES}
-          aria-label="Abrir Menú de Dragon Soul"
-        >
-          Menú Dragon Soul
-        </a>
+        {(["tio-toro", "dragon-soul"] as const).map((brandId) => (
+          <a
+            key={brandId}
+            href={BRANDS[brandId].menuUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={BUTTON_CLASSES}
+            aria-label={`Abrir Menú de ${BRANDS[brandId].name}`}
+          >
+            <span className="h-14 sm:h-[88px] flex items-center justify-center">
+              <BrandWordmark brandId={brandId} size="hero" />
+            </span>
+            <span className={BUTTON_LABEL_CLASSES}>Ver menú</span>
+          </a>
+        ))}
       </div>
 
       {/* Botón discreto con ChevronDown centrado abajo */}

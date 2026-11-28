@@ -11,7 +11,6 @@
   --color-brand-surface: #0C0C0C;
   --color-brand-text: #F5F5F0;
   --color-brand-secondary: #9A9A95;
-  --color-brand-champagne: #C8A97E;
 }
 
 :root {
@@ -37,7 +36,7 @@ body {
 
 /* Custom editorial selection */
 ::selection {
-  background: #C8A97E;
+  background: #F5F5F0;
   color: #050505;
 }
 
@@ -56,7 +55,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #C8A97E;
+  background: #9A9A95;
 }
 
 /* Animaciones de entrada (animate-in + fade-in / zoom-in-95) usadas por menús, dropdowns y visor.

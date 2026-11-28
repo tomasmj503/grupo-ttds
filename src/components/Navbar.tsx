@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import Link from "next/link";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { LogoGrupoTTDS } from "./BrandLogos";
 import { BrandNavCard } from "./BrandNavCard";
+import { HomeLink } from "./HomeLink";
 import { BRANDS, GROUP_INFO, getWhatsAppUrl, type BrandKey } from "@/config/site";
 
 interface NavbarProps {
@@ -46,6 +46,22 @@ export function Navbar({
   );
 
   const reservationDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Avanza/retrocede el panel una tarjeta a la vez, alineado a las tarjetas, y llega siempre
+  // hasta el borde (posición absoluta, no relativa: así los clics rápidos no se quedan a medias)
+  const scrollBrandPanel = (direction: 1 | -1) => {
+    const el = brandScrollRef.current;
+    const firstCard = el?.firstElementChild as HTMLElement | null | undefined;
+    if (!el || !firstCard) return;
+
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 16;
+    const step = firstCard.offsetWidth + gap;
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    const currentIndex = Math.round(el.scrollLeft / step);
+    const target = Math.min(Math.max((currentIndex + direction) * step, 0), maxScroll);
+
+    el.scrollTo({ left: target, behavior: "smooth" });
+  };
 
   const toggleBrand = (brandKey: BrandKey) =>
     setOpenBrand((prev) => (prev === brandKey ? null : brandKey));
@@ -172,13 +188,12 @@ export function Navbar({
 
         <div className="px-5 sm:px-8 py-2.5 sm:py-3 max-w-7xl mx-auto flex items-center justify-between gap-4">
           {/* Izquierda: Logo Grupo TTDS */}
-          <Link
-            href="/"
+          <HomeLink
             className="flex items-center shrink-0 focus:outline-none"
-            aria-label="Ir a página de inicio Grupo TTDS"
+            ariaLabel="Ir a página de inicio Grupo TTDS"
           >
             <LogoGrupoTTDS className="h-9 w-auto shrink-0" />
-          </Link>
+          </HomeLink>
 
           {/* Derecha: Enlaces de escritorio, botón píldora Reservations con dropdown y botón hamburguesa en móvil */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0" style={{ fontFamily: "var(--font-jakarta), sans-serif" }}>
@@ -210,12 +225,7 @@ export function Navbar({
                           {/* Botón anterior (oculto cuando no hay desplazamiento a la izquierda) */}
                           <button
                             type="button"
-                            onClick={() =>
-                              brandScrollRef.current?.scrollBy({
-                                left: -400,
-                                behavior: "smooth",
-                              })
-                            }
+                            onClick={() => scrollBrandPanel(-1)}
                             className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all ${
                               canScrollLeft
                                 ? "opacity-100 pointer-events-auto"
@@ -245,12 +255,7 @@ export function Navbar({
                           {/* Botón siguiente (oculto cuando no hay desplazamiento a la derecha) */}
                           <button
                             type="button"
-                            onClick={() =>
-                              brandScrollRef.current?.scrollBy({
-                                left: 400,
-                                behavior: "smooth",
-                              })
-                            }
+                            onClick={() => scrollBrandPanel(1)}
                             className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all ${
                               canScrollRight
                                 ? "opacity-100 pointer-events-auto"
@@ -333,11 +338,10 @@ export function Navbar({
         >
           {/* Cabecera: nombre del grupo a la izquierda, X a la derecha */}
           <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
-            <Link
-              href="/"
-              onClick={() => setIsMobileMenuOpen(false)}
+            <HomeLink
+              onNavigate={() => setIsMobileMenuOpen(false)}
               className="focus:outline-none"
-              aria-label="Ir a página de inicio Grupo TTDS"
+              ariaLabel="Ir a página de inicio Grupo TTDS"
             >
               <span
                 style={{
@@ -350,7 +354,7 @@ export function Navbar({
               >
                 GRUPO TTDS
               </span>
-            </Link>
+            </HomeLink>
 
             <button
               type="button"

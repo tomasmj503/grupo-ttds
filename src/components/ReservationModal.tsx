@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight } from "lucide-react";
 import { BRANDS, GROUP_INFO, getWhatsAppUrl } from "@/config/site";
-import { LogoTioToro, LogoDragonSoul } from "./BrandLogos";
+import { BrandWordmark } from "./BrandWordmark";
 
 interface ReservationModalProps {
   isOpen: boolean;
@@ -77,7 +77,7 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
 
             {/* Encabezado Editorial */}
             <div className="mb-8">
-              <span className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.28em] text-[#C8A97E] font-medium block mb-2">
+              <span className="text-[10px] sm:text-[11px] font-sans uppercase tracking-[0.28em] text-white/70 font-medium block mb-2">
                 RESERVACIONES EXCLUSIVAS
               </span>
               <h2
@@ -86,7 +86,7 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
               >
                 Selecciona tu Experiencia
               </h2>
-              <div className="w-10 h-[1px] bg-[#C8A97E]/50 mx-auto my-3" />
+              <div className="w-10 h-[1px] bg-white/30 mx-auto my-3" />
               <p className="text-[#9A9A95] text-xs sm:text-sm font-sans tracking-wide leading-relaxed max-w-sm mx-auto">
                 Atención directa y personalizada vía WhatsApp oficial para coordinar tu mesa y ocasión especial.
               </p>
@@ -100,16 +100,16 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onClose}
-                className="group relative block p-5 sm:p-6 bg-white/[0.02] border border-white/10 hover:border-[#C8A97E] transition-all duration-500 rounded-none overflow-hidden"
+                className="group relative block p-5 sm:p-6 bg-white/[0.02] border border-white/10 hover:border-white/70 transition-all duration-500 rounded-none overflow-hidden"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <LogoTioToro className="h-6 sm:h-7 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
+                    <BrandWordmark brandId="tio-toro" size="modal" />
                     <p className="text-[11px] text-[#9A9A95] tracking-[0.14em] font-sans mt-2">
                       Hamburguesas artesanales
                     </p>
                   </div>
-                  <div className="w-10 h-10 border border-white/10 group-hover:border-[#C8A97E] group-hover:bg-[#C8A97E] text-[#9A9A95] group-hover:text-[#050505] flex items-center justify-center transition-all duration-500 shrink-0">
+                  <div className="w-10 h-10 border border-white/10 group-hover:border-white group-hover:bg-white text-[#9A9A95] group-hover:text-[#050505] flex items-center justify-center transition-all duration-500 shrink-0">
                     <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-0.5" />
                   </div>
                 </div>
@@ -121,16 +121,16 @@ export function ReservationModal({ isOpen, onClose }: ReservationModalProps) {
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={onClose}
-                className="group relative block p-5 sm:p-6 bg-white/[0.02] border border-white/10 hover:border-[#C8A97E] transition-all duration-500 rounded-none overflow-hidden"
+                className="group relative block p-5 sm:p-6 bg-white/[0.02] border border-white/10 hover:border-white/70 transition-all duration-500 rounded-none overflow-hidden"
               >
                 <div className="flex items-center justify-between gap-4">
                   <div className="space-y-1">
-                    <LogoDragonSoul className="h-6 sm:h-7 w-auto text-[#F5F5F0] group-hover:text-[#C8A97E] transition-colors duration-500" />
+                    <BrandWordmark brandId="dragon-soul" size="modal" />
                     <p className="text-[11px] text-[#9A9A95] tracking-[0.14em] font-sans mt-2">
                       Sushi y comida asiática
                     </p>
                   </div>
-                  <div className="w-10 h-10 border border-white/10 group-hover:border-[#C8A97E] group-hover:bg-[#C8A97E] text-[#9A9A95] group-hover:text-[#050505] flex items-center justify-center transition-all duration-500 shrink-0">
+                  <div className="w-10 h-10 border border-white/10 group-hover:border-white group-hover:bg-white text-[#9A9A95] group-hover:text-[#050505] flex items-center justify-center transition-all duration-500 shrink-0">
                     <ArrowRight className="w-4 h-4 transition-transform duration-500 group-hover:translate-x-0.5" />
                   </div>
                 </div>
