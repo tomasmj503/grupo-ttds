@@ -8,8 +8,8 @@ import { PhotoLightbox } from "./PhotoLightbox";
 
 interface PhotoGalleryGridProps {
   photos: GalleryPhoto[];
-  /** Video opcional: aparece de primero en la galería */
-  video?: GalleryVideo;
+  /** Videos opcionales: aparecen de primeros en la galería */
+  videos?: GalleryVideo[];
   /** Título accesible de la página (no se muestra en pantalla, como en Tao) */
   heading: string;
 }
@@ -98,17 +98,17 @@ function GalleryVideoTile({ video }: { video: GalleryVideo }) {
  * - tablet: 2 columnas · escritorio (≥ 1024 px): 3 columnas en mosaico
  * Cada foto abre el visor a pantalla completa; el video (si hay) va de primero.
  */
-export function PhotoGalleryGrid({ photos, video, heading }: PhotoGalleryGridProps) {
+export function PhotoGalleryGrid({ photos, videos = [], heading }: PhotoGalleryGridProps) {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   const entries: GalleryEntry[] = [
-    ...(video ? [{ kind: "video", video } as const] : []),
+    ...videos.map((video) => ({ kind: "video", video }) as const),
     ...photos.map((photo, photoIndex) => ({ kind: "photo", photo, photoIndex }) as const),
   ];
 
   const renderEntry = (entry: GalleryEntry) => {
     if (entry.kind === "video") {
-      return <GalleryVideoTile key="video" video={entry.video} />;
+      return <GalleryVideoTile key={entry.video.src} video={entry.video} />;
     }
 
     const { photo, photoIndex } = entry;

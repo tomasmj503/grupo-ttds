@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight, Eye, Pause, Play } from "lucide-react";
-import { HOME_MARQUEE_GALLERY } from "@/config/site";
+import { BRAND_LIST, HOME_MARQUEE_GALLERY } from "@/config/site";
 import { InstagramIcon } from "./BrandLogos";
 import { PhotoLightbox } from "./PhotoLightbox";
 
@@ -206,10 +206,10 @@ export function MarqueeGallery() {
       {/* Cabecera Editorial */}
       <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-5 sm:mb-8 text-center space-y-1.5 sm:space-y-2.5">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-sans font-light sm:font-normal tracking-tight text-white">
-          Tío Toro · Dragon Soul
+          {BRAND_LIST.map((brand) => brand.name).join(" · ")}
         </h2>
         <p className="text-xs sm:text-sm font-sans font-normal tracking-wide text-white/80">
-          Hamburguesas artesanales · Sushi y comida asiática
+          {BRAND_LIST.map((brand) => brand.shortDescription).join(" · ")}
         </p>
       </div>
 

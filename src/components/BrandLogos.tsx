@@ -1,4 +1,5 @@
 import React from "react";
+import { GROUP_INFO } from "@/config/site";
 
 interface LogoProps {
   className?: string;
@@ -6,19 +7,19 @@ interface LogoProps {
 }
 
 /**
- * Logo oficial de GRUPO TTDS
- * Estética editorial de lujo. Blanco puro (#FFFFFF), sin dorados.
- * TTDS arriba en Cormorant Garamond, GRUPO debajo en espaciado sutil.
+ * Logo del grupo, hecho con texto: una palabra grande (GROUP_INFO.logo.mark) en Cormorant Garamond
+ * y un subtítulo sutil debajo (GROUP_INFO.logo.subtitle). Blanco puro, sin dorados.
+ * Provisional: si el grupo tiene un logo oficial, se reemplaza este componente por una imagen.
  */
-export function LogoGrupoTTDS({
+export function GroupLogo({
   className = "h-10 w-auto shrink-0",
 }: LogoProps) {
   return (
     <span
       className={`inline-flex flex-col items-center leading-none select-none ${className}`}
-      aria-label="Grupo TTDS"
+      aria-label={GROUP_INFO.displayName}
     >
-      {/* TTDS — tipografía editorial Cormorant */}
+      {/* Palabra principal — tipografía editorial Cormorant */}
       <span
         style={{
           fontFamily: "var(--font-cormorant), 'Cormorant Garamond', Georgia, serif",
@@ -29,7 +30,7 @@ export function LogoGrupoTTDS({
           lineHeight: 1,
         }}
       >
-        TTDS
+        {GROUP_INFO.logo.mark}
       </span>
       {/* GRUPO — subtítulo muy sutil */}
       <span
@@ -43,7 +44,7 @@ export function LogoGrupoTTDS({
           marginTop: "3px",
         }}
       >
-        GRUPO
+        {GROUP_INFO.logo.subtitle}
       </span>
     </span>
   );

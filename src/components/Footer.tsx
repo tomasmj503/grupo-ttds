@@ -3,11 +3,12 @@
 import React from "react";
 import Link from "next/link";
 import {
+  BRAND_ORDER,
   BRANDS,
   GROUP_INFO,
   getWhatsAppUrl,
 } from "@/config/site";
-import { LogoGrupoTTDS } from "./BrandLogos";
+import { GroupLogo } from "./BrandLogos";
 import { BrandWordmark } from "./BrandWordmark";
 import { HomeLink } from "./HomeLink";
 
@@ -49,12 +50,12 @@ export function Footer({
       style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
     >
       <div className="max-w-7xl mx-auto px-5 sm:px-8 w-full flex flex-col items-center text-center">
-        {/* Logo Grupo TTDS - arriba del todo */}
+        {/* Logo del grupo - arriba del todo */}
         <HomeLink
           className="group focus:outline-none mb-11"
-          ariaLabel="Ir al inicio de Grupo TTDS"
+          ariaLabel={`Ir al inicio de ${GROUP_INFO.displayName}`}
         >
-          <LogoGrupoTTDS className="h-8 sm:h-10 w-auto text-white group-hover:text-white/75 transition-colors duration-300" />
+          <GroupLogo className="h-8 sm:h-10 w-auto text-white group-hover:text-white/75 transition-colors duration-300" />
         </HomeLink>
 
         {/* Pila vertical de enlaces centrados - muy juntos */}
@@ -111,7 +112,7 @@ export function Footer({
 
         {/* Logos de los restaurantes - mismo ancho, centrados */}
         <div className="w-full flex items-center justify-center gap-8 sm:gap-12 mt-5">
-          {(["tio-toro", "dragon-soul"] as const).map((brandId) => (
+          {BRAND_ORDER.map((brandId) => (
             <a
               key={brandId}
               href={BRANDS[brandId].instagramUrl}
@@ -127,7 +128,7 @@ export function Footer({
 
         {/* Cierre inferior: solo copyright */}
         <p className="text-[9px] sm:text-[10px] text-white/70 mt-6">
-          © {currentYear} Grupo TTDS. Todos los derechos reservados · Bogotá, Colombia
+          © {currentYear} {GROUP_INFO.displayName}. Todos los derechos reservados · {GROUP_INFO.location}
         </p>
       </div>
     </footer>

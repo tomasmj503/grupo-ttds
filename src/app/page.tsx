@@ -1,5 +1,5 @@
 import { SiteShell } from "@/components/SiteShell";
-import { HeroVideo } from "@/components/HeroVideo";
+import { Hero } from "@/components/Hero";
 import { MarqueeGallery } from "@/components/MarqueeGallery";
 import { SpecialEventsSection } from "@/components/SpecialEventsSection";
 
@@ -7,17 +7,12 @@ export default function HomePage() {
   return (
     <SiteShell>
       {/* 1. Hero a pantalla completa con los logos que abren cada menú */}
-      <HeroVideo />
+      <Hero />
 
-      {/* 2. Anclas de navegación por restaurante */}
-      <div id="tio-toro" />
-
-      {/* 3. Galería Marquee infinita con visor */}
+      {/* 2. Galería Marquee infinita con visor */}
       <MarqueeGallery />
 
-      <div id="dragon-soul" />
-
-      {/* 4. Bloque de Eventos Especiales */}
+      {/* 3. Bloque de Eventos Especiales */}
       <SpecialEventsSection />
     </SiteShell>
   );

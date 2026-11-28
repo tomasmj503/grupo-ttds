@@ -2,21 +2,22 @@
 
 import React from "react";
 import { ChevronDown } from "lucide-react";
-import { BRANDS } from "@/config/site";
+import { BRAND_ORDER, BRANDS, HERO } from "@/config/site";
 import { BrandWordmark } from "./BrandWordmark";
 
-// Fotografía gastronómica oscura/nocturna — bowl de sopa de fideos (ramen) en ambiente íntimo, alto impacto editorial
-const HERO_PHOTO_URL =
-  "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=1920&q=85";
-
-// Botón de vidrio con el logo del restaurante y la etiqueta "Ver menú"
+// Botón de vidrio con el logo del restaurante y la etiqueta "Ver menú".
+// Todos los botones miden exactamente lo mismo, sean 1, 2 o más restaurantes.
 const BUTTON_CLASSES =
   "group relative z-30 pointer-events-auto w-[clamp(130px,42vw,152px)] h-[112px] sm:w-[240px] sm:h-[152px] shrink-0 justify-center rounded-2xl bg-black/45 hover:bg-black/60 border border-white/70 hover:border-white backdrop-blur-sm transition-all duration-300 flex flex-col items-center gap-2 cursor-pointer";
 
 const BUTTON_LABEL_CLASSES =
   "text-[10px] sm:text-[11px] font-medium uppercase tracking-[0.22em] text-white/80 group-hover:text-white transition-colors";
 
-export function HeroVideo() {
+/**
+ * Portada del inicio: foto (o video, si HERO.videoUrl está definido) a pantalla completa
+ * y un botón con el logo de cada restaurante que abre su menú.
+ */
+export function Hero() {
   const scrollToGallery = () => {
     const gallerySection = document.getElementById("galeria-editorial");
     if (gallerySection) {
@@ -26,22 +27,34 @@ export function HeroVideo() {
 
   return (
     <section className="relative h-[100svh] w-full overflow-hidden">
-      {/* Fotografía oscura de fondo gastronómico (sin video) */}
-      <img
-        src={HERO_PHOTO_URL}
-        alt="Gastronomía asiática nocturna — bowl de sopa de fideos (ramen) en ambiente íntimo"
-        className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none scale-105"
-        aria-hidden="true"
-      />
+      {HERO.videoUrl ? (
+        <video
+          src={HERO.videoUrl}
+          poster={HERO.imageUrl}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none"
+          aria-hidden="true"
+        />
+      ) : (
+        <img
+          src={HERO.imageUrl}
+          alt={HERO.imageAlt}
+          className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none scale-105"
+          aria-hidden="true"
+        />
+      )}
 
       {/* Overlay de gradiente suave para legibilidad */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/25 to-black/65 pointer-events-none z-10" />
 
-      {/* Logos de los menús al borde inferior, lado a lado: dejan libre el centro para el video */}
-      <div
-        className="absolute inset-x-0 bottom-[124px] sm:bottom-[140px] z-30 pointer-events-auto flex flex-row items-center justify-center gap-3 sm:gap-4 px-5"
-      >
-        {(["tio-toro", "dragon-soul"] as const).map((brandId) => (
+      {/* Logos de los menús al borde inferior, lado a lado: dejan libre el centro para el video.
+          Con más de dos restaurantes, pasan a una segunda fila. */}
+      <div className="absolute inset-x-0 bottom-[124px] sm:bottom-[140px] z-30 pointer-events-auto flex flex-row flex-wrap items-center justify-center gap-3 sm:gap-4 px-5">
+        {BRAND_ORDER.map((brandId) => (
           <a
             key={brandId}
             href={BRANDS[brandId].menuUrl}
@@ -71,4 +84,3 @@ export function HeroVideo() {
     </section>
   );
 }
-

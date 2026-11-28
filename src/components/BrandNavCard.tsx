@@ -176,9 +176,9 @@ function HistoryOverlay({ brand, onClose }: { brand: BrandConfig; onClose: () =>
       </button>
 
       <p className="text-white font-semibold text-sm tracking-wide">Historia</p>
-      {/* Texto provisional hasta contar con la historia real de cada restaurante */}
+      {/* Si el restaurante no tiene historia (brand.history.text), se muestra un texto provisional */}
       <p className="text-white/70 text-xs leading-relaxed max-w-[260px]">
-        Muy pronto compartiremos aquí la historia de {brand.name}.
+        {brand.history?.text ?? `Muy pronto compartiremos aquí la historia de ${brand.name}.`}
       </p>
     </div>
   );

@@ -2,19 +2,16 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
-import { LogoGrupoTTDS } from "./BrandLogos";
+import { GroupLogo } from "./BrandLogos";
 import { BrandNavCard } from "./BrandNavCard";
 import { HomeLink } from "./HomeLink";
-import { BRANDS, GROUP_INFO, getWhatsAppUrl, type BrandKey } from "@/config/site";
+import { BRAND_ORDER, BRANDS, GROUP_INFO, getWhatsAppUrl, type BrandKey } from "@/config/site";
 
 interface NavbarProps {
   onOpenReservation?: () => void;
   isMobileMenuOpen?: boolean;
   onMobileMenuChange?: (open: boolean) => void;
 }
-
-// Orden en que aparecen los restaurantes en el menú
-const BRAND_ORDER: BrandKey[] = ["tio-toro", "dragon-soul"];
 
 // Los disparadores y paneles de los menús llevan este atributo para el cierre al hacer clic fuera
 const BRAND_MENU_ATTR = "data-brand-menu";
@@ -187,12 +184,12 @@ export function Navbar({
       >
 
         <div className="px-5 sm:px-8 py-2.5 sm:py-3 max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* Izquierda: Logo Grupo TTDS */}
+          {/* Izquierda: logo del grupo */}
           <HomeLink
             className="flex items-center shrink-0 focus:outline-none"
-            ariaLabel="Ir a página de inicio Grupo TTDS"
+            ariaLabel={`Ir a la página de inicio de ${GROUP_INFO.displayName}`}
           >
-            <LogoGrupoTTDS className="h-9 w-auto shrink-0" />
+            <GroupLogo className="h-9 w-auto shrink-0" />
           </HomeLink>
 
           {/* Derecha: Enlaces de escritorio, botón píldora Reservations con dropdown y botón hamburguesa en móvil */}
@@ -341,7 +338,7 @@ export function Navbar({
             <HomeLink
               onNavigate={() => setIsMobileMenuOpen(false)}
               className="focus:outline-none"
-              ariaLabel="Ir a página de inicio Grupo TTDS"
+              ariaLabel={`Ir a la página de inicio de ${GROUP_INFO.displayName}`}
             >
               <span
                 style={{
@@ -352,7 +349,7 @@ export function Navbar({
                 }}
                 className="text-white uppercase select-none"
               >
-                GRUPO TTDS
+                {GROUP_INFO.name}
               </span>
             </HomeLink>
 

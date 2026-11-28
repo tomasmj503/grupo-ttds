@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Plus_Jakarta_Sans } from "next/font/google";
+import { GROUP_INFO, SITE } from "@/config/site";
 import "./globals.css";
 
 const cormorant = Cormorant_Garamond({
@@ -17,32 +18,21 @@ const jakarta = Plus_Jakarta_Sans({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#050505",
+  themeColor: SITE.themeColor,
   width: "device-width",
   initialScale: 1,
 };
 
 export const metadata: Metadata = {
-  title: "GRUPO TTDS | Hospitalidad Nocturna & Alta Gastronomía",
-  description:
-    "Grupo TTDS reúne los conceptos gastronómicos y nocturnos más cautivadores: Tío Toro y Dragon Soul. Cocina de autor, mixología y atmósfera editorial en Bogotá.",
-  keywords: [
-    "Grupo TTDS",
-    "Tío Toro",
-    "Dragon Soul",
-    "Normandía Bogotá",
-    "Restaurantes de lujo Bogotá",
-    "Hamburguesas Artesanales",
-    "Sushi Bar",
-    "Lounge Nocturno",
-  ],
+  title: SITE.title,
+  description: SITE.description,
+  keywords: SITE.keywords,
   openGraph: {
-    title: "GRUPO TTDS | Hospitalidad Nocturna & Alta Gastronomía",
-    description:
-      "Tío Toro & Dragon Soul. Conceptos de alta cocina y vida nocturna con estética editorial.",
-    url: "https://grupottds.com",
-    siteName: "Grupo TTDS",
-    locale: "es_CO",
+    title: SITE.title,
+    description: SITE.ogDescription,
+    url: SITE.url,
+    siteName: GROUP_INFO.displayName,
+    locale: SITE.locale,
     type: "website",
   },
 };
