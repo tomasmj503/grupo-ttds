@@ -1,18 +1,16 @@
-# GRUPO TTDS
+# Plantilla de sitio para grupos de restaurantes
 
-Sitio web de **Grupo TTDS**, que reúne a dos restaurantes en Normandía, Bogotá:
+Sitio web hecho para **Grupo TTDS** (Tío Toro y Dragon Soul, en Normandía, Bogotá) y diseñado como **plantilla**: sirve para cualquier grupo de 1 a 4 restaurantes. Agregar un restaurante nuevo es crear **un archivo de datos** y sumar sus fotos; no hace falta tocar ningún componente.
 
-- **Tío Toro** — hamburguesas artesanales.
-- **Dragon Soul** — sushi y comida asiática.
+El estilo toma como referencia [Tao Group](https://taogroup.com): fondo negro, mucha fotografía y casi ningún texto sobre las imágenes.
 
-El diseño toma como referencia el estilo editorial y nocturno de [Tao Group](https://taogroup.com): fondo negro, mucha fotografía y casi ningún texto sobre las imágenes.
+## Qué incluye
 
-## Qué tiene
-
-- **Home** (`/`): hero con los logos que abren cada menú (Canva), carrusel de fotos que se mueve solo, sección de eventos privados y footer.
-- **Galerías**: `/tio-toro/galeria`, `/dragon-soul/galeria` y `/galeria` (las dos mezcladas). La de Tío Toro y la mezclada incluyen un video.
-- **Menú desplegable** de cada restaurante: Menú, Galería, Reserva (WhatsApp), Redes sociales, Historia y Ubicación (Google Maps, Waze y reseñas).
+- **Home** (`/`): portada con un botón de logo por restaurante que abre su menú (Canva), carrusel de fotos que se mueve solo, sección de eventos privados y footer.
+- **Galerías**: una por restaurante (`/<restaurante>/galeria`) y una mezclada (`/galeria`). Aceptan fotos y video.
+- **Menú desplegable** por restaurante: Menú, Galería, Reserva (WhatsApp), Redes sociales, Historia y Ubicación (Google Maps, Waze y reseñas).
 - **Reservas** por WhatsApp con el mensaje ya escrito para cada restaurante.
+- **Scripts** para preparar fotos y videos nuevos (`scripts/`).
 
 ## Tecnología
 
@@ -27,22 +25,27 @@ npm install
 npm run dev      # http://localhost:3000
 ```
 
-Otros comandos:
-
 ```bash
 npm run lint     # revisión de código
 npm run build    # compilación de producción (la misma que hace el despliegue)
-npm run start    # sirve la compilación de producción
 ```
 
-Antes de subir cambios conviene correr `npx tsc --noEmit`, `npm run lint` y `npm run build`: los tres deben terminar sin errores.
+Antes de subir cambios: `npx tsc --noEmit`, `npm run lint` y `npm run build` deben terminar sin errores.
+
+## Agregar un restaurante
+
+1. Preparar sus fotos: `python3 scripts/prepare-photos.py <carpeta-con-fotos> <id> --darken`
+2. Guardar su logo (SVG) en `public/logos/<id>.svg`.
+3. Copiar `src/config/brands/tio-toro.ts` como `src/config/brands/<id>.ts` y completar sus datos.
+4. Añadirlo a la lista en `src/config/brands/index.ts`.
+5. Reiniciar `npm run dev`.
+
+Con eso aparece solo en la barra de navegación, el hero, el carrusel, el footer, el modal de reservas, su propia galería y la galería mezclada. Los pasos completos están en [`ARCHITECTURE.md`](ARCHITECTURE.md).
+
+## Usarla para otro grupo
+
+Copiar el proyecto, cambiar los datos del grupo en `src/config/site.ts`, reemplazar los restaurantes en `src/config/brands/` y sustituir las imágenes de `public/`. La lista de pasos está en la sección «Usar la plantilla para otro grupo» de [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
 ## Despliegue
 
-El repositorio está conectado a **Vercel** a través de GitHub. Cada `git push` a `main` despliega el sitio automáticamente; no hace falta hacer nada más.
-
-## Dónde cambiar las cosas
-
-Casi todo el contenido (textos, enlaces, redes, fotos, orden de las galerías, video, número de WhatsApp) está en un solo archivo: [`src/config/site.ts`](src/config/site.ts).
-
-La guía completa de cómo está hecho el sitio y de cómo cambiar cada cosa está en [`ARCHITECTURE.md`](ARCHITECTURE.md).
+El repositorio está conectado a **Vercel** a través de GitHub: cada `git push` a `main` despliega el sitio automáticamente.
