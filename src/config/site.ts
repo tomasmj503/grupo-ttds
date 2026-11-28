@@ -11,6 +11,25 @@ export interface BrandStory {
 
 export type BrandKey = "tio-toro" | "dragon-soul";
 
+/** Tarjetas del menú desplegable de cada restaurante en la Navbar */
+export type BrandNavCardId = "menu" | "galeria" | "reserva" | "redes" | "historia";
+
+export interface BrandNavCard {
+  id: BrandNavCardId;
+  title: string;
+  imageUrl: string;
+  /** Textos de la versión de escritorio (panel horizontal) */
+  desktop: { subtitle: string; cta: string };
+  /** Textos de la versión móvil (acordeón vertical) */
+  mobile: { subtitle: string; cta: string };
+}
+
+/** Qué hace cada tarjeta al hacer clic */
+export type BrandNavCardAction =
+  | { type: "external"; href: string }
+  | { type: "internal"; href: string }
+  | { type: "overlay"; overlay: "social" | "history" };
+
 export interface BrandConfig {
   id: BrandKey;
   name: string;
@@ -21,7 +40,10 @@ export interface BrandConfig {
   googleReviewsUrl: string;
   instagramUrl: string;
   tiktokUrl: string;
+  /** Opcional: si no existe, el botón de Facebook no se muestra */
+  facebookUrl?: string;
   story: BrandStory;
+  navCards: BrandNavCard[];
   cardImages: string[];
   galleryImages: string[];
 }
@@ -87,12 +109,14 @@ export const BRANDS: Record<BrandKey, BrandConfig> = {
     id: "tio-toro",
     name: "Tío Toro",
     tagline: "Hamburguesas Artesanales & Brasa · Normandía",
-    menuUrl: "https://canva.link/0k5iu4p18di948h",
+    // Enlace de VISTA de Canva (los canva.link cortos redirigen al editor)
+    menuUrl: "https://www.canva.com/design/DAETKN_Z2zg/oi4-ki_Y7c_P4qmPUksl0A/view",
     whatsappReserveText: "Hola, deseo hacer una reservación para Tío Toro",
     googleMapsUrl: "https://maps.google.com/?q=Tio+Toro+Burger+Normandia+Bogota",
     googleReviewsUrl: "https://maps.google.com/?q=Tio+Toro+Burger+Normandia+Bogota",
-    instagramUrl: "https://instagram.com",
-    tiktokUrl: "https://tiktok.com",
+    instagramUrl: "https://www.instagram.com/tiotoroburger/",
+    tiktokUrl: "https://www.tiktok.com/@tiotoroburger",
+    facebookUrl: "https://www.facebook.com/profile.php?id=100063583748803",
     story: {
       title: "El Origen de Tío Toro",
       paragraphs: [
@@ -100,6 +124,48 @@ export const BRANDS: Record<BrandKey, BrandConfig> = {
         "Un espacio pensado para los amantes del fuego lento, recetas de autor y una atmósfera nocturna con carácter propio.",
       ],
     },
+    navCards: [
+      {
+        id: "menu",
+        title: "Menú",
+        imageUrl:
+          "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Explora nuestra carta", cta: "Ver más" },
+        mobile: { subtitle: "Explora nuestra carta", cta: "Ver menú" },
+      },
+      {
+        id: "galeria",
+        title: "Galería",
+        imageUrl:
+          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Mira el ambiente", cta: "Ver más" },
+        mobile: { subtitle: "El sabor en imágenes", cta: "Explorar" },
+      },
+      {
+        id: "reserva",
+        title: "Reserva",
+        imageUrl:
+          "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Asegura tu lugar", cta: "Reservar" },
+        mobile: { subtitle: "Tu mesa, sin esperas", cta: "Reservar" },
+      },
+      {
+        id: "redes",
+        title: "Redes sociales",
+        imageUrl:
+          "https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Conéctate con nosotros", cta: "Seguir" },
+        mobile: { subtitle: "Lo que pasa en Tío Toro", cta: "Descubrir" },
+      },
+      {
+        id: "historia",
+        title: "Historia",
+        imageUrl:
+          "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Conoce nuestro origen", cta: "Descubrir" },
+        mobile: { subtitle: "Nacimos para la brasa", cta: "Nuestra historia" },
+      },
+    ],
     cardImages: [
       "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=80",
@@ -117,12 +183,14 @@ export const BRANDS: Record<BrandKey, BrandConfig> = {
     id: "dragon-soul",
     name: "Dragon Soul",
     tagline: "Cocina Asiática de Autor · Sushi Bar & Lounge",
-    menuUrl: "https://canva.link/e2ccz4no41wols5",
+    // Enlace de VISTA de Canva (los canva.link cortos redirigen al editor)
+    menuUrl: "https://www.canva.com/design/DAGsIjI-nY8/zWSS-138yvWEIDUidsKRUA/view#2",
     whatsappReserveText: "Hola, deseo hacer una reservación para Dragon Soul",
     googleMapsUrl: "https://maps.google.com/?q=Dragon+Soul+Restaurante",
     googleReviewsUrl: "https://maps.google.com/?q=Dragon+Soul+Restaurante",
-    instagramUrl: "https://instagram.com",
-    tiktokUrl: "https://tiktok.com",
+    instagramUrl: "https://www.instagram.com/dragonsoulco/",
+    tiktokUrl: "https://www.tiktok.com/@dragonsoulco",
+    // facebookUrl: pendiente. Al agregarlo aparece automáticamente en la tarjeta de Redes sociales.
     story: {
       title: "El Espíritu de Dragon Soul",
       paragraphs: [
@@ -130,6 +198,48 @@ export const BRANDS: Record<BrandKey, BrandConfig> = {
         "Sabores asiáticos de autor, mixología exótica y una atmósfera envolvente diseñada para despertar los sentidos.",
       ],
     },
+    navCards: [
+      {
+        id: "menu",
+        title: "Menú",
+        imageUrl:
+          "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Explora nuestra carta", cta: "Ver más" },
+        mobile: { subtitle: "Explora nuestra carta", cta: "Ver menú" },
+      },
+      {
+        id: "galeria",
+        title: "Galería",
+        imageUrl:
+          "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Mira el ambiente", cta: "Ver más" },
+        mobile: { subtitle: "El sabor en imágenes", cta: "Explorar" },
+      },
+      {
+        id: "reserva",
+        title: "Reserva",
+        imageUrl:
+          "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Asegura tu lugar", cta: "Reservar" },
+        mobile: { subtitle: "Tu mesa, sin esperas", cta: "Reservar" },
+      },
+      {
+        id: "redes",
+        title: "Redes sociales",
+        imageUrl:
+          "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Conéctate con nosotros", cta: "Seguir" },
+        mobile: { subtitle: "Lo que pasa en Dragon Soul", cta: "Descubrir" },
+      },
+      {
+        id: "historia",
+        title: "Historia",
+        imageUrl:
+          "https://images.unsplash.com/photo-1563245372-f21724e3856d?auto=format&fit=crop&w=600&q=80",
+        desktop: { subtitle: "Conoce nuestro origen", cta: "Descubrir" },
+        mobile: { subtitle: "El alma del dragón", cta: "Nuestra historia" },
+      },
+    ],
     cardImages: [
       "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?auto=format&fit=crop&w=1200&q=80",
       "https://images.unsplash.com/photo-1611143669185-af224c5e3252?auto=format&fit=crop&w=1200&q=80",
@@ -175,7 +285,7 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
     alt: "Especialidad de la Casa - Tío Toro",
     hasInstagram: true,
     instagramUrl: BRANDS["tio-toro"].instagramUrl,
-    caption: "Nuestra creación insigne en Normandía. Síguenos en @TioToro",
+    caption: "Nuestra creación insigne en Normandía. Síguenos en @tiotoroburger",
     brandId: "tio-toro",
   },
   {
@@ -194,7 +304,7 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
     alt: "Rolls de Autor y Presentación Oriental - Dragon Soul",
     hasInstagram: true,
     instagramUrl: BRANDS["dragon-soul"].instagramUrl,
-    caption: "Experiencia visual y sensorial milenaria en @DragonSoul",
+    caption: "Experiencia visual y sensorial milenaria en @dragonsoulco",
     brandId: "dragon-soul",
   },
   {
@@ -212,7 +322,7 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
     alt: "Doble Carne Brasa Angus - Tío Toro",
     hasInstagram: true,
     instagramUrl: BRANDS["tio-toro"].instagramUrl,
-    caption: "Carne Angus madurada y ahumada al quebracho blanco en @TioToro",
+    caption: "Carne Angus madurada y ahumada al quebracho blanco en @tiotoroburger",
     brandId: "tio-toro",
   },
   {
@@ -231,7 +341,7 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
     alt: "Ambiente Nocturno y Luz Íntima - Dragon Soul",
     hasInstagram: true,
     instagramUrl: BRANDS["dragon-soul"].instagramUrl,
-    caption: "Atmósfera envolvente, beats nocturnos y mixología en @DragonSoul",
+    caption: "Atmósfera envolvente, beats nocturnos y mixología en @dragonsoulco",
     brandId: "dragon-soul",
   },
   {
@@ -249,7 +359,7 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
     alt: "Sashimi Deluxe y Cítricos Asiáticos - Dragon Soul",
     hasInstagram: true,
     instagramUrl: BRANDS["dragon-soul"].instagramUrl,
-    caption: "Cortes de precisión y armonía estética en @DragonSoul",
+    caption: "Cortes de precisión y armonía estética en @dragonsoulco",
     brandId: "dragon-soul",
   },
 ];
@@ -260,5 +370,31 @@ export const HOME_MARQUEE_GALLERY: MarqueeGalleryItem[] = [
 export function getWhatsAppUrl(phoneNumber: string, message: string): string {
   const cleanPhone = phoneNumber.replace(/[^0-9]/g, "");
   return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+}
+
+/**
+ * Decide a dónde lleva cada tarjeta del menú desplegable de un restaurante.
+ * Para cambiar un destino, se edita aquí; Navbar no necesita tocarse.
+ */
+export function getBrandNavCardAction(
+  brand: BrandConfig,
+  cardId: BrandNavCardId
+): BrandNavCardAction {
+  switch (cardId) {
+    case "menu":
+      return { type: "external", href: brand.menuUrl };
+    case "reserva":
+      return {
+        type: "external",
+        href: getWhatsAppUrl(GROUP_INFO.whatsappNumber, brand.whatsappReserveText),
+      };
+    case "galeria":
+      // Provisional: lleva al carrusel del home hasta que exista la galería propia de cada restaurante
+      return { type: "internal", href: "/#galeria-editorial" };
+    case "redes":
+      return { type: "overlay", overlay: "social" };
+    case "historia":
+      return { type: "overlay", overlay: "history" };
+  }
 }
 

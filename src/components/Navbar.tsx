@@ -1,16 +1,23 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { ChevronDown, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { LogoGrupoTTDS } from "./BrandLogos";
-import { BRANDS, GROUP_INFO, getWhatsAppUrl } from "@/config/site";
+import { BrandNavCard } from "./BrandNavCard";
+import { BRANDS, GROUP_INFO, getWhatsAppUrl, type BrandKey } from "@/config/site";
 
 interface NavbarProps {
   onOpenReservation?: () => void;
   isMobileMenuOpen?: boolean;
   onMobileMenuChange?: (open: boolean) => void;
 }
+
+// Orden en que aparecen los restaurantes en el menú
+const BRAND_ORDER: BrandKey[] = ["tio-toro", "dragon-soul"];
+
+// Los disparadores y paneles de los menús llevan este atributo para el cierre al hacer clic fuera
+const BRAND_MENU_ATTR = "data-brand-menu";
 
 export function Navbar({
   onOpenReservation,
@@ -20,36 +27,33 @@ export function Navbar({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [internalMobileMenuOpen, setInternalMobileMenuOpen] = useState(false);
-  const [isTioToroOpen, setIsTioToroOpen] = useState(false);
-  const tioToroPanelRef = useRef<HTMLDivElement>(null);
-  const tioToroMobilePanelRef = useRef<HTMLDivElement>(null);
-  const tioToroScrollRef = useRef<HTMLDivElement>(null);
-  const tioToroDesktopTriggerRef = useRef<HTMLDivElement>(null);
-  const tioToroMobileTriggerRef = useRef<HTMLDivElement>(null);
+  // Restaurante cuyo menú está desplegado (solo uno a la vez)
+  const [openBrand, setOpenBrand] = useState<BrandKey | null>(null);
+  const brandScrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const isMobileMenuOpen = controlledMobileMenuOpen ?? internalMobileMenuOpen;
-  const setIsMobileMenuOpen = (open: boolean) => {
-    if (onMobileMenuChange) {
-      onMobileMenuChange(open);
-    } else {
-      setInternalMobileMenuOpen(open);
-    }
-  };
+  const setIsMobileMenuOpen = useCallback(
+    (open: boolean) => {
+      if (onMobileMenuChange) {
+        onMobileMenuChange(open);
+      } else {
+        setInternalMobileMenuOpen(open);
+      }
+    },
+    [onMobileMenuChange]
+  );
 
   const reservationDropdownRef = useRef<HTMLDivElement>(null);
 
-  // URLs contextuales para WhatsApp
-  const tioToroUrl = getWhatsAppUrl(
-    GROUP_INFO.whatsappNumber,
-    BRANDS["tio-toro"].whatsappReserveText
-  );
+  const toggleBrand = (brandKey: BrandKey) =>
+    setOpenBrand((prev) => (prev === brandKey ? null : brandKey));
 
-  const dragonSoulUrl = getWhatsAppUrl(
-    GROUP_INFO.whatsappNumber,
-    BRANDS["dragon-soul"].whatsappReserveText
-  );
+  const closeAllMenus = () => {
+    setOpenBrand(null);
+    setIsMobileMenuOpen(false);
+  };
 
   // Manejo de scroll para el fondo de la barra de navegación
   useEffect(() => {
@@ -93,36 +97,21 @@ export function Navbar({
     };
   }, [isReservationOpen]);
 
-  // Cierre del panel de Tío Toro al hacer clic fuera o pulsar Escape
+  // Cierre del menú de un restaurante al hacer clic fuera o pulsar Escape
   useEffect(() => {
-    if (!isTioToroOpen) return;
+    if (!openBrand) return;
 
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
-      const target = event.target as Node;
-      const insideDesktop =
-        tioToroPanelRef.current && tioToroPanelRef.current.contains(target);
-      const insideDesktopTrigger =
-        tioToroDesktopTriggerRef.current &&
-        tioToroDesktopTriggerRef.current.contains(target);
-      const insideMobile =
-        tioToroMobilePanelRef.current &&
-        tioToroMobilePanelRef.current.contains(target);
-      const insideMobileTrigger =
-        tioToroMobileTriggerRef.current &&
-        tioToroMobileTriggerRef.current.contains(target);
-
-      // No cerrar si el clic está dentro de cualquiera de los paneles
-      // o dentro de cualquiera de los botones que abren/cierran Tío Toro
-      if (insideDesktop || insideDesktopTrigger || insideMobile || insideMobileTrigger) {
+      // No cerrar si el clic está dentro de un disparador o de un panel de restaurante
+      if (event.target instanceof Element && event.target.closest(`[${BRAND_MENU_ATTR}]`)) {
         return;
       }
-
-      setIsTioToroOpen(false);
+      setOpenBrand(null);
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setIsTioToroOpen(false);
+        setOpenBrand(null);
       }
     };
 
@@ -135,7 +124,7 @@ export function Navbar({
       document.removeEventListener("touchstart", handleClickOutside);
       document.removeEventListener("keydown", handleKeyDown);
     };
-  }, [isTioToroOpen]);
+  }, [openBrand]);
 
   // Manejo de tecla Escape y bloqueo de scroll cuando el menú móvil está abierto
   useEffect(() => {
@@ -155,12 +144,11 @@ export function Navbar({
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = originalOverflow;
     };
-  }, [isMobileMenuOpen]);
+  }, [isMobileMenuOpen, setIsMobileMenuOpen]);
 
-
-  // Sincroniza el estado de los botones de scroll horizontal del panel Tío Toro
+  // Sincroniza el estado de los botones de scroll horizontal del panel de escritorio
   useEffect(() => {
-    const el = tioToroScrollRef.current;
+    const el = brandScrollRef.current;
     if (!el) return;
 
     const updateScrollState = () => {
@@ -171,7 +159,7 @@ export function Navbar({
     updateScrollState();
     el.addEventListener("scroll", updateScrollState, { passive: true });
     return () => el.removeEventListener("scroll", updateScrollState);
-  }, [isTioToroOpen]);
+  }, [openBrand]);
 
   return (
     <>
@@ -194,180 +182,93 @@ export function Navbar({
 
           {/* Derecha: Enlaces de escritorio, botón píldora Reservations con dropdown y botón hamburguesa en móvil */}
           <div className="flex items-center gap-3 sm:gap-4 shrink-0" style={{ fontFamily: "var(--font-jakarta), sans-serif" }}>
-{/* Enlaces en escritorio (hidden md:flex): Dragon Soul y Tío Toro antes de Reservaciones */}
+            {/* Menús de restaurantes en escritorio (hidden md:flex) */}
             <nav className="hidden md:flex items-center gap-7">
-              {/* Tío Toro — botón con ChevronDown y panel expandible */}
-              <div className="relative" ref={tioToroDesktopTriggerRef}>
-                <button
-                  type="button"
-                  onClick={() => setIsTioToroOpen((prev) => !prev)}
-                  aria-expanded={isTioToroOpen}
-                  className="flex items-center gap-1.5 text-sm font-medium tracking-wide text-neutral-300 hover:text-white transition-colors cursor-pointer focus:outline-none"
-                >
-                  Tío Toro
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${
-                      isTioToroOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
+              {BRAND_ORDER.map((brandKey) => {
+                const brand = BRANDS[brandKey];
+                const isOpen = openBrand === brandKey;
 
-                {isTioToroOpen && (
-                  <div
-                    ref={tioToroPanelRef}
-                    className="fixed inset-x-0 top-16 z-50 bg-neutral-950 border-t border-white/10 px-8 py-6"
-                  >
-                    <div className="relative max-w-7xl mx-auto">
-                      {/* Botón anterior (oculto cuando no hay desplazamiento a la izquierda) */}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          tioToroScrollRef.current?.scrollBy({
-                            left: -400,
-                            behavior: "smooth",
-                          })
-                        }
-                        className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all ${
-                          canScrollLeft
-                            ? "opacity-100 pointer-events-auto"
-                            : "opacity-0 pointer-events-none"
+                return (
+                  <div key={brandKey} className="relative" {...{ [BRAND_MENU_ATTR]: "" }}>
+                    <button
+                      type="button"
+                      onClick={() => toggleBrand(brandKey)}
+                      aria-expanded={isOpen}
+                      className="flex items-center gap-1.5 text-sm font-medium tracking-wide text-neutral-300 hover:text-white transition-colors cursor-pointer focus:outline-none"
+                    >
+                      {brand.name}
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform duration-200 ${
+                          isOpen ? "rotate-180" : ""
                         }`}
-                        aria-label="Anterior"
-                      >
-                        <ChevronLeft className="w-5 h-5" />
-                      </button>
+                      />
+                    </button>
 
-                      {/* Contenedor con scroll horizontal */}
-                      <div
-                        ref={tioToroScrollRef}
-                        className="flex overflow-x-auto scroll-smooth gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-                      >
-                        {/* Menú */}
-                        <Link
-                          href="/#tio-toro"
-                          onClick={() => setIsTioToroOpen(false)}
-                          className="w-[420px] h-[316px] shrink-0 rounded-2xl overflow-hidden relative group cursor-pointer block"
-                        >
-                          <img
-                            src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80"
-                            alt="Menú Tío Toro"
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-black/55 group-hover:bg-black/40 transition-colors duration-300" />
-                          <div className="relative z-10 flex flex-col justify-end h-full p-4">
-                            <h3 className="text-white font-semibold text-sm tracking-wide">Menú</h3>
-                            <p className="text-white/70 text-xs mt-0.5 leading-tight">Explora nuestra carta</p>
-                            <span className="mt-2 inline-block text-[11px] font-medium text-white/90 border border-white/30 rounded-full px-3 py-1 w-fit group-hover:bg-white/10 transition-colors">Ver más</span>
+                    {isOpen && (
+                      <div className="fixed inset-x-0 top-16 z-50 bg-neutral-950 border-t border-white/10 px-8 py-6">
+                        <div className="relative max-w-7xl mx-auto">
+                          {/* Botón anterior (oculto cuando no hay desplazamiento a la izquierda) */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              brandScrollRef.current?.scrollBy({
+                                left: -400,
+                                behavior: "smooth",
+                              })
+                            }
+                            className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all ${
+                              canScrollLeft
+                                ? "opacity-100 pointer-events-auto"
+                                : "opacity-0 pointer-events-none"
+                            }`}
+                            aria-label="Anterior"
+                          >
+                            <ChevronLeft className="w-5 h-5" />
+                          </button>
+
+                          {/* Contenedor con scroll horizontal */}
+                          <div
+                            ref={brandScrollRef}
+                            className="flex overflow-x-auto scroll-smooth gap-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+                          >
+                            {brand.navCards.map((card) => (
+                              <BrandNavCard
+                                key={card.id}
+                                brand={brand}
+                                card={card}
+                                variant="desktop"
+                                onNavigate={() => setOpenBrand(null)}
+                              />
+                            ))}
                           </div>
-                        </Link>
-                        {/* Galería */}
-                        <Link
-                          href="/#tio-toro"
-                          onClick={() => setIsTioToroOpen(false)}
-                          className="w-[420px] h-[316px] shrink-0 rounded-2xl overflow-hidden relative group cursor-pointer block"
-                        >
-                          <img
-                            src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80"
-                            alt="Galería Tío Toro"
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-black/55 group-hover:bg-black/40 transition-colors duration-300" />
-                          <div className="relative z-10 flex flex-col justify-end h-full p-4">
-                            <h3 className="text-white font-semibold text-sm tracking-wide">Galería</h3>
-                            <p className="text-white/70 text-xs mt-0.5 leading-tight">Mira el ambiente</p>
-                            <span className="mt-2 inline-block text-[11px] font-medium text-white/90 border border-white/30 rounded-full px-3 py-1 w-fit group-hover:bg-white/10 transition-colors">Ver más</span>
-                          </div>
-                        </Link>
-                      {/* Reserva */}
-                        <a
-                          href={tioToroUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={() => setIsTioToroOpen(false)}
-                          className="w-[420px] h-[316px] shrink-0 rounded-2xl overflow-hidden relative group cursor-pointer block"
-                        >
-                          <img
-                            src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80"
-                            alt="Reserva Tío Toro"
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-black/55 group-hover:bg-black/40 transition-colors duration-300" />
-                          <div className="relative z-10 flex flex-col justify-end h-full p-4">
-                            <h3 className="text-white font-semibold text-sm tracking-wide">Reserva</h3>
-                            <p className="text-white/70 text-xs mt-0.5 leading-tight">Asegura tu lugar</p>
-                            <span className="mt-2 inline-block text-[11px] font-medium text-white/90 border border-white/30 rounded-full px-3 py-1 w-fit group-hover:bg-white/10 transition-colors">Reservar</span>
-                          </div>
-                        </a>
-                        {/* Redes sociales */}
-                        <Link
-                          href="/#tio-toro"
-                          onClick={() => setIsTioToroOpen(false)}
-                          className="w-[420px] h-[316px] shrink-0 rounded-2xl overflow-hidden relative group cursor-pointer block"
-                        >
-                          <img
-                            src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=600&q=80"
-                            alt="Redes sociales Tío Toro"
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-black/55 group-hover:bg-black/40 transition-colors duration-300" />
-                          <div className="relative z-10 flex flex-col justify-end h-full p-4">
-                            <h3 className="text-white font-semibold text-sm tracking-wide">Redes sociales</h3>
-                            <p className="text-white/70 text-xs mt-0.5 leading-tight">Conéctate con nosotros</p>
-                            <span className="mt-2 inline-block text-[11px] font-medium text-white/90 border border-white/30 rounded-full px-3 py-1 w-fit group-hover:bg-white/10 transition-colors">Seguir</span>
-                          </div>
-                        </Link>
-                        {/* Historia */}
-                        <Link
-                          href="/#tio-toro"
-                          onClick={() => setIsTioToroOpen(false)}
-                          className="w-[420px] h-[316px] shrink-0 rounded-2xl overflow-hidden relative group cursor-pointer block"
-                        >
-                          <img
-                            src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80"
-                            alt="Historia Tío Toro"
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          />
-                          <div className="absolute inset-0 bg-black/55 group-hover:bg-black/40 transition-colors duration-300" />
-                          <div className="relative z-10 flex flex-col justify-end h-full p-4">
-                            <h3 className="text-white font-semibold text-sm tracking-wide">Historia</h3>
-                            <p className="text-white/70 text-xs mt-0.5 leading-tight">Conoce nuestro origen</p>
-                            <span className="mt-2 inline-block text-[11px] font-medium text-white/90 border border-white/30 rounded-full px-3 py-1 w-fit group-hover:bg-white/10 transition-colors">Descubrir</span>
-                          </div>
-                        </Link>
+
+                          {/* Botón siguiente (oculto cuando no hay desplazamiento a la derecha) */}
+                          <button
+                            type="button"
+                            onClick={() =>
+                              brandScrollRef.current?.scrollBy({
+                                left: 400,
+                                behavior: "smooth",
+                              })
+                            }
+                            className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all ${
+                              canScrollRight
+                                ? "opacity-100 pointer-events-auto"
+                                : "opacity-0 pointer-events-none"
+                            }`}
+                            aria-label="Siguiente"
+                          >
+                            <ChevronRight className="w-5 h-5" />
+                          </button>
+                        </div>
                       </div>
-
-                      {/* Botón siguiente (oculto cuando no hay desplazamiento a la derecha) */}
-                      <button
-                        type="button"
-                        onClick={() =>
-                          tioToroScrollRef.current?.scrollBy({
-                            left: 400,
-                            behavior: "smooth",
-                          })
-                        }
-                        className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/80 text-white transition-all ${
-                          canScrollRight
-                            ? "opacity-100 pointer-events-auto"
-                            : "opacity-0 pointer-events-none"
-                        }`}
-                        aria-label="Siguiente"
-                      >
-                        <ChevronRight className="w-5 h-5" />
-                      </button>
-                    </div>
+                    )}
                   </div>
-                )}
-              </div>
-              <Link
-                href="/#dragon-soul"
-                prefetch={false}
-                className="text-sm font-medium tracking-wide text-neutral-300 hover:text-white transition-colors"
-              >
-                Dragon Soul
-              </Link>
+                );
+              })}
             </nav>
 
-<div className="relative" ref={reservationDropdownRef}>
+            <div className="relative" ref={reservationDropdownRef}>
               <button
                 type="button"
                 onClick={() => setIsReservationOpen((prev) => !prev)}
@@ -386,29 +287,22 @@ export function Navbar({
                   className="absolute right-0 top-full mt-2 bg-[#141414] border border-white/15 rounded-xl shadow-2xl py-2 min-w-[180px] z-50 animate-in fade-in zoom-in-95 duration-150"
                 >
                   <div className="flex flex-col">
-                    {/* Tío Toro */}
-                    <a
-                      href="https://wa.me/573115329393"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      role="menuitem"
-                      onClick={() => setIsReservationOpen(false)}
-                      className="px-4 py-2.5 text-sm font-medium text-[#F5F5F0] hover:text-white hover:bg-white/5 transition-colors text-left"
-                    >
-                      Tío Toro
-                    </a>
-
-                    {/* Dragon Soul */}
-                    <a
-                      href="https://wa.me/573115329393"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      role="menuitem"
-                      onClick={() => setIsReservationOpen(false)}
-                      className="px-4 py-2.5 text-sm font-medium text-[#F5F5F0] hover:text-white hover:bg-white/5 transition-colors text-left"
-                    >
-                      Dragon Soul
-                    </a>
+                    {BRAND_ORDER.map((brandKey) => (
+                      <a
+                        key={brandKey}
+                        href={getWhatsAppUrl(
+                          GROUP_INFO.whatsappNumber,
+                          BRANDS[brandKey].whatsappReserveText
+                        )}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        role="menuitem"
+                        onClick={() => setIsReservationOpen(false)}
+                        className="px-4 py-2.5 text-sm font-medium text-[#F5F5F0] hover:text-white hover:bg-white/5 transition-colors text-left"
+                      >
+                        {BRANDS[brandKey].name}
+                      </a>
+                    ))}
                   </div>
                 </div>
               )}
@@ -470,146 +364,58 @@ export function Navbar({
 
           {/* Filas de navegación + botón Reservaciones en flujo normal */}
           <nav className="flex flex-col px-6 pt-2 pb-8">
-            {/* Tío Toro móvil — botón con ChevronDown y sub-elementos apilados */}
-            <div ref={tioToroMobileTriggerRef}>
+            {/* Restaurantes en móvil: botón con ChevronDown y tarjetas apiladas */}
+            {BRAND_ORDER.map((brandKey) => {
+              const brand = BRANDS[brandKey];
+              const isOpen = openBrand === brandKey;
+
+              return (
+                <div key={brandKey} {...{ [BRAND_MENU_ATTR]: "" }}>
+                  <button
+                    type="button"
+                    onClick={() => toggleBrand(brandKey)}
+                    aria-expanded={isOpen}
+                    className="w-full flex items-center justify-between py-4 text-base font-normal text-white/90 hover:text-white transition-colors border-b border-white/10 focus:outline-none cursor-pointer"
+                    style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
+                  >
+                    {brand.name}
+                    <ChevronDown
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {isOpen && (
+                    <div className="flex flex-col gap-3 px-3 pt-2 pb-4 border-b border-white/10">
+                      {brand.navCards.map((card) => (
+                        <BrandNavCard
+                          key={card.id}
+                          brand={brand}
+                          card={card}
+                          variant="mobile"
+                          onNavigate={closeAllMenus}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+            {/* Botón píldora Reservaciones — abre el modal para elegir restaurante */}
+            <div className="pt-6">
               <button
                 type="button"
-                onClick={() => setIsTioToroOpen((prev) => !prev)}
-                aria-expanded={isTioToroOpen}
-                className="w-full flex items-center justify-between py-4 text-base font-normal text-white/90 hover:text-white transition-colors border-b border-white/10 focus:outline-none cursor-pointer"
-                style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
-              >
-                Tío Toro
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform duration-200 ${
-                    isTioToroOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </button>
-
-              {isTioToroOpen && (
-                <div
-                  ref={tioToroMobilePanelRef}
-                  className="flex flex-col gap-3 px-3 pt-2 pb-4 border-b border-white/10"
-                >
-                  {/* Menú */}
-                  <Link
-                    href="/#tio-toro"
-                    onClick={() => { setIsTioToroOpen(false); setIsMobileMenuOpen(false); }}
-                    className="relative h-[293px] rounded-2xl overflow-hidden group cursor-pointer block"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?auto=format&fit=crop&w=600&q=80"
-                      alt="Menú Tío Toro"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="relative z-10 flex flex-col justify-end h-full p-5">
-                      <h3 className="text-2xl font-normal text-white">Menú</h3>
-                      <p className="text-sm text-white/90 mt-1 mb-4">Explora nuestra carta</p>
-                      <span className="w-full rounded-full bg-white text-black py-1.5 text-xs font-medium text-center">Ver menú</span>
-                    </div>
-                  </Link>
-                  {/* Galería */}
-                  <Link
-                    href="/#tio-toro"
-                    onClick={() => { setIsTioToroOpen(false); setIsMobileMenuOpen(false); }}
-                    className="relative h-[293px] rounded-2xl overflow-hidden group cursor-pointer block"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=600&q=80"
-                      alt="Galería Tío Toro"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="relative z-10 flex flex-col justify-end h-full p-5">
-                      <h3 className="text-2xl font-normal text-white">Galería</h3>
-                      <p className="text-sm text-white/90 mt-1 mb-4">El sabor en imágenes</p>
-                      <span className="w-full rounded-full bg-white text-black py-1.5 text-xs font-medium text-center">Explorar</span>
-                    </div>
-                  </Link>
-                  {/* Reserva */}
-                  <a
-                    href={tioToroUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => { setIsTioToroOpen(false); setIsMobileMenuOpen(false); }}
-                    className="relative h-[293px] rounded-2xl overflow-hidden group cursor-pointer block"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=600&q=80"
-                      alt="Reserva Tío Toro"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="relative z-10 flex flex-col justify-end h-full p-5">
-                      <h3 className="text-2xl font-normal text-white">Reserva</h3>
-                      <p className="text-sm text-white/90 mt-1 mb-4">Tu mesa, sin esperas</p>
-                      <span className="w-full rounded-full bg-white text-black py-1.5 text-xs font-medium text-center">Reservar</span>
-                    </div>
-                  </a>
-                  {/* Redes sociales */}
-                  <Link
-                    href="/#tio-toro"
-                    onClick={() => { setIsTioToroOpen(false); setIsMobileMenuOpen(false); }}
-                    className="relative h-[293px] rounded-2xl overflow-hidden group cursor-pointer block"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1552566626-52f8b828add9?auto=format&fit=crop&w=600&q=80"
-                      alt="Redes sociales Tío Toro"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="relative z-10 flex flex-col justify-end h-full p-5">
-                      <h3 className="text-2xl font-normal text-white">Redes sociales</h3>
-                      <p className="text-sm text-white/90 mt-1 mb-4">Lo que pasa en Tío Toro</p>
-                      <span className="w-full rounded-full bg-white text-black py-1.5 text-xs font-medium text-center">Descubrir</span>
-                    </div>
-                  </Link>
-                  {/* Historia */}
-                  <Link
-                    href="/#tio-toro"
-                    onClick={() => { setIsTioToroOpen(false); setIsMobileMenuOpen(false); }}
-                    className="relative h-[293px] rounded-2xl overflow-hidden group cursor-pointer block"
-                  >
-                    <img
-                      src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=600&q=80"
-                      alt="Historia Tío Toro"
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-                    <div className="relative z-10 flex flex-col justify-end h-full p-5">
-                      <h3 className="text-2xl font-normal text-white">Historia</h3>
-                      <p className="text-sm text-white/90 mt-1 mb-4">Nacimos para la brasa</p>
-                      <span className="w-full rounded-full bg-white text-black py-1.5 text-xs font-medium text-center">Nuestra historia</span>
-                    </div>
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href="/#dragon-soul"
-              prefetch={false}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="py-4 text-base font-normal text-white/90 hover:text-white transition-colors border-b border-white/10 focus:outline-none"
-              style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
-            >
-              Dragon Soul
-            </Link>
-
-            {/* Botón píldora Reservaciones — flujo natural, justo debajo de Dragon Soul, ancho completo */}
-            <div className="pt-6">
-              <a
-                href="https://wa.me/573115329393"
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="w-full block rounded-full px-5 py-3 text-sm font-medium bg-white text-[#0A0A0A] hover:bg-neutral-100 transition-colors text-center"
+                onClick={() => {
+                  closeAllMenus();
+                  onOpenReservation?.();
+                }}
+                className="w-full block rounded-full px-5 py-3 text-sm font-medium bg-white text-[#0A0A0A] hover:bg-neutral-100 transition-colors text-center cursor-pointer"
                 style={{ fontFamily: "var(--font-jakarta), sans-serif" }}
               >
                 Reservaciones
-              </a>
+              </button>
             </div>
           </nav>
         </div>
